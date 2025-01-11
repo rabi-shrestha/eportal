@@ -2,3 +2,7 @@ body {
     /* Remove default class styling */
     all: unset;
 }
+
+.header__nav-item.current-menu-item > .header__nav-link {
+    color: #f9ab00;
+}
