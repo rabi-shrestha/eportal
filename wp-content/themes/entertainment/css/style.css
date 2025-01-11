@@ -1,0 +1,4 @@
+body {
+    /* Remove default class styling */
+    all: unset;
+}

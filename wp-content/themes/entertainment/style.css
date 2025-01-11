@@ -1,0 +1,99 @@
+/*
+Theme Name: Entertainment
+Theme URI: http://example.com/mytheme
+Author: Your Name
+Author URI: http://rabishrestha.com.np
+Description: Entertainment Website
+Version: 1.0
+*/
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+header {
+    background: #333;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+}
+
+header nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+header nav ul li {
+    display: inline;
+    margin-right: 10px;
+}
+
+header nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+article {
+    padding: 20px;
+    margin: 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #333;
+    color: white;
+}
+
+.search-form {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.search-field {
+    padding: 8px;
+    width: 300px;
+}
+
+.search-submit {
+    padding: 8px 16px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.search-submit:hover {
+    background-color: #555;
+}
+
+.search-results article {
+    margin-bottom: 20px;
+}
+
+.search-results h2 a {
+    font-size: 24px;
+    color: #333;
+    text-decoration: none;
+}
+
+.search-results h2 a:hover {
+    text-decoration: underline;
+}
+
+/* #content-area {
+    transition: opacity 0.5s ease-in-out;
+}
+
+#content-area.loading {
+    opacity: 0.5;
+} */
