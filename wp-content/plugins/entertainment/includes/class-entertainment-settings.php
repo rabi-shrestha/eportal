@@ -113,14 +113,13 @@ class Entertainment_Settings {
                     'ended'      => $show['ended'],
                     'summary'    => $show['summary'],
                     'rating'    => $show['rating']['average'],
-                    'image'      => !empty($show['image']['medium']) ? $show['image']['medium'] : null,
+                    'image'      => !empty($show['image']['medium']) ? $this->get_cloaked_image_url($show['image']['medium'], 'episode') : null,
                     'schedule'   => $show['schedule'],
                     'previous_episodes' => isset($show['_links']['previousepisode']['href']) 
                                            ? $show['_links']['previousepisode']['href'] 
                                            : null,
                 );
             }
-
             return $shows_array;
         } else {
             return 'No episodes found for this show.';
@@ -128,10 +127,31 @@ class Entertainment_Settings {
     }
 
     public function get_cloaked_image_url($external_image_url, $image_type) {
-        $encoded_url = base64_encode($external_image_url);
+        $image_url = $this->get_base64_image_from_url($external_image_url);
+        // $encoded_url = base64_encode($image_url);
         // $custom_url = home_url('/' . $image_type . '/?url=' . $encoded_url);
-        // echo $custom_url;
+        // echo $image_url;
         // die;
-        return 'data:image/png;base64,' . $encoded_url;
+        return $image_url;
+    }
+
+    function get_base64_image_from_url($image_url) {
+        // Get the image content from the external URL
+        $image_data = file_get_contents($image_url);
+    
+        // Check if the image was successfully fetched
+        if ($image_data === false) {
+            return false;
+        }
+    
+        // Get the image's MIME type
+        $image_info = getimagesizefromstring($image_data);
+        $mime_type = $image_info['mime'];
+    
+        // Convert the image data to Base64
+        $base64_image = base64_encode($image_data);
+    
+        // Return the Base64 image string with the appropriate MIME type
+        return 'data:' . $mime_type . ';base64,' . $base64_image;
     }
 }

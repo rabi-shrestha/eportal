@@ -126,8 +126,9 @@ get_header();
                     <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
                         <div class="item">
                             <div class="item__cover">
+                                <img src="<?php echo $show['image']; ?>" alt="" />
                                 <?php if (!empty($show['image'])) : ?>
-                                    <img src="<?php echo esc_url($show['image']); ?>" alt="<?php echo esc_attr($show['name']); ?>" alt="" />
+                                    <img src="<?php echo esc_url($show['image']); ?>" alt="" />
                                 <?php else: ?>
                                     <img src="<?php echo get_template_directory_uri(); ?>/img/default/default.svg" alt="<?php echo esc_attr($show['name']); ?>" alt="" />
                                 <?php endif; ?>
