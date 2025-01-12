@@ -30,19 +30,20 @@
 
 						<!-- header auth -->
 						<div class="header__auth">
-							<form action="#" class="header__search">
-								<input class="header__search-input" type="text" placeholder="Search...">
-								<button class="header__search-button" type="button">
-									<i class="ti ti-search"></i>
-								</button>
-								<button class="header__search-close" type="button">
-									<i class="ti ti-x"></i>
-								</button>
-							</form>
-
-							<button class="header__search-btn" type="button">
+						<form action="<?php echo esc_url(home_url('/')); ?>" class="header__search" method="get">
+							<input class="header__search-input" type="text" name="s" placeholder="Search..." value="<?php echo get_search_query(); ?>">
+							<button class="header__search-button" type="submit">
 								<i class="ti ti-search"></i>
 							</button>
+							<button class="header__search-close" type="button">
+								<i class="ti ti-x"></i>
+							</button>
+						</form>
+
+						<button class="header__search-btn" type="button">
+							<i class="ti ti-search"></i>
+						</button>
+
 
 							<!-- dropdown -->
 							<div class="header__profile">

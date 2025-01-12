@@ -27,7 +27,7 @@ class Entertainment_Settings {
         include plugin_dir_path( __FILE__ ) . '../templates/admin-page.php';
     }
 
-    public function tvmage_search_result($search_term) {
+    public function tvmage_episodes($search_term, $page) {
         $show_id = 1;
         $api_url = "https://api.tvmaze.com/shows/$show_id/episodes"; 
 
@@ -73,5 +73,65 @@ class Entertainment_Settings {
         } else {
             return 'No episodes found for this show.';
         }
+    }
+
+    public function tvmage_search_result($search_term) {
+        $api_url = "https://api.tvmaze.com/search/shows?q=$search_term"; 
+
+        $api_key = '9AqM4_NBynH1eGqOxGZjH6Gt0WP0Yyu2';
+
+        $args = array(
+            'method'    => 'GET',
+            'timeout'   => 15,
+            'headers'   => array(
+                'Authorization' => 'Bearer ' . $api_key,
+                'Content-Type'  => 'application/json',
+            ),
+        );
+
+        $response = wp_remote_get( $api_url, $args );
+
+        if ( is_wp_error( $response ) ) {
+            return 'There was an error: ' . $response->get_error_message();
+        }
+
+        $data = wp_remote_retrieve_body( $response );
+        $episodes = json_decode( $data, true );
+
+        $shows_array = array();
+
+        if ( ! empty( $episodes ) ) {
+            foreach ( $episodes as $episode ) {
+                $show = $episode['show'];
+                $shows_array[] = array(
+                    'name'       => $show['name'],
+                    'type'       => $show['type'],
+                    'language'   => $show['language'],
+                    'genres'     => $show['genres'],
+                    'status'     => $show['status'],
+                    'premiered'  => $show['premiered'],
+                    'ended'      => $show['ended'],
+                    'summary'    => $show['summary'],
+                    'rating'    => $show['rating']['average'],
+                    'image'      => !empty($show['image']['medium']) ? $show['image']['medium'] : null,
+                    'schedule'   => $show['schedule'],
+                    'previous_episodes' => isset($show['_links']['previousepisode']['href']) 
+                                           ? $show['_links']['previousepisode']['href'] 
+                                           : null,
+                );
+            }
+
+            return $shows_array;
+        } else {
+            return 'No episodes found for this show.';
+        }
+    }
+
+    public function get_cloaked_image_url($external_image_url, $image_type) {
+        $encoded_url = base64_encode($external_image_url);
+        // $custom_url = home_url('/' . $image_type . '/?url=' . $encoded_url);
+        // echo $custom_url;
+        // die;
+        return 'data:image/png;base64,' . $encoded_url;
     }
 }

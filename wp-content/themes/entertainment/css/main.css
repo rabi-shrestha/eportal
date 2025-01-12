@@ -1515,6 +1515,7 @@ body::-webkit-scrollbar-thumb {
   justify-content: flex-start;
   align-items: start;
   flex-wrap: wrap;
+  color: #f9ab00;
 }
 .item__category a {
   font-size: 14px;

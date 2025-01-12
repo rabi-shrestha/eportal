@@ -82,64 +82,19 @@ function entertainment_custom_search($query) {
         // Get the search query term
         $search_term = get_search_query();
 
-        $search_result = get_search_results($search_term);
-
-        // echo '<pre>';
-        // print_r($search_term);
-        // echo '</pre>';
-        // return;
-
-        // Example: Modify the query to search multiple post types
-        if ( ! empty( $search_term ) ) {
-            $query->set( 'post_type', array( 'post', 'page', 'custom_post_type' ) );
-        }
-
-        // Example: Filter by custom field (meta query)
-        if ( isset( $_GET['custom_field'] ) && ! empty( $_GET['custom_field'] ) ) {
-            $query->set( 'meta_query', array(
-                array(
-                    'key'     => 'custom_field_name', // Replace with your custom field name
-                    'value'   => sanitize_text_field( $_GET['custom_field'] ),
-                    'compare' => 'LIKE'
-                )
-            ));
+        if ( class_exists( 'Entertainment_Settings' ) ) {
+            $plugin_instance = new Entertainment_Settings();
+            $search_result = $plugin_instance->tvmage_search_result($search_term);
+            
+            if (!empty($search_result)) {
+                include locate_template('partials/tvmage-results-template.php');
+            } else {
+                echo '<p>No results found for "' . esc_html($search_term) . '".</p>';
+            }
         }
     }
 }
 add_filter('pre_get_posts', 'entertainment_custom_search');
-
-function get_search_results($search_term) {
-    if ( class_exists( 'Entertainment_Settings' ) ) {
-        $plugin_instance = new Entertainment_Settings();
-        $message = $plugin_instance->tvmage_search_result($search_term);
-        echo $message;  // Outputs: "Hello from the Plugin class method!"
-    } else {
-        echo "Plugin class not found.";
-    }
-}
-
-// function handle_ajax_navigation() {
-//     // Get the URL from the AJAX request
-//     $url = isset($_GET['url']) ? esc_url_raw($_GET['url']) : '';
-
-//     // If a valid URL is passed, load the content
-//     if ($url) {
-//         // Use WordPress functions to load the page content
-//         $post_id = url_to_postid($url);
-//         $post = get_post($post_id);
-
-//         if ($post) {
-//             // Output the content of the post (you can customize this)
-//             echo '<div class="post-content">';
-//             echo apply_filters('the_content', $post->post_content);
-//             echo '</div>';
-//         }
-//     }
-//     wp_die();  // Terminate the AJAX request properly
-// }
-
-// add_action('wp_ajax_load_page', 'handle_ajax_navigation');   // For logged-in users
-// add_action('wp_ajax_nopriv_load_page', 'handle_ajax_navigation');  // For non-logged-in users
 
 function register_my_menu() {
     register_nav_menus( array(
@@ -149,34 +104,110 @@ function register_my_menu() {
 add_action( 'after_setup_theme', 'register_my_menu' );
 
 class Entertainment_Walker_Nav_Menu extends Walker_Nav_Menu {
-    // Starts the list before the elements are added.
+    // Start level (sub-menu)
     function start_lvl( &$output, $depth = 0, $args = null ) {
-        $indent = str_repeat("\t", $depth);
+        $indent = str_repeat("\t", $depth); // Indent based on depth
         $output .= "\n$indent<ul class=\"dropdown-menu header__dropdown-menu\">\n";
     }
 
-    // Starts the element output.
+    // Start element (menu item)
     function start_el( &$output, $item, $depth = 0, $args = null, $id = 0 ) {
         $classes = empty( $item->classes ) ? array() : (array) $item->classes;
         $classes[] = 'header__nav-item';
 
+        // Check if the item has children
+        if (in_array('menu-item-has-children', $classes)) {
+            $classes[] = 'dropdown'; // Add dropdown class for Bootstrap
+        }
+
+        // Create class attribute
         $class_names = join(' ', apply_filters('nav_menu_css_class', array_filter($classes), $item, $args));
         $class_names = $class_names ? ' class="' . esc_attr($class_names) . '"' : '';
 
+        // Start <li>
         $output .= '<li' . $class_names . '>';
 
+        // Create link attributes
         $attributes  = ! empty( $item->attr_title ) ? ' title="' . esc_attr( $item->attr_title ) . '"' : '';
         $attributes .= ! empty( $item->target ) ? ' target="' . esc_attr( $item->target ) . '"' : '';
         $attributes .= ! empty( $item->xfn ) ? ' rel="' . esc_attr( $item->xfn ) . '"' : '';
         $attributes .= ! empty( $item->url ) ? ' href="' . esc_attr( $item->url ) . '"' : '';
-        $attributes .= ' class="header__nav-link"';
 
+        // Add Bootstrap classes for dropdown toggles
+        if (in_array('menu-item-has-children', $item->classes)) {
+            $attributes .= ' class="header__nav-link"';
+            $attributes .= ' data-bs-toggle="dropdown" aria-expanded="false"';
+        } else {
+            $attributes .= ' class="header__nav-link"';
+        }
+
+        // Build the link
         $item_output = $args->before;
         $item_output .= '<a' . $attributes . '>';
         $item_output .= $args->link_before . apply_filters('the_title', $item->title, $item->ID) . $args->link_after;
+
+        // Add dropdown icon if the item has children
+        if (in_array('menu-item-has-children', $item->classes)) {
+            $item_output .= ' <i class="ti ti-chevron-down"></i>';
+        }
+
         $item_output .= '</a>';
         $item_output .= $args->after;
 
+        // Append the output
         $output .= apply_filters('walker_nav_menu_start_el', $item_output, $item, $depth, $args);
     }
+
+    // End element
+    function end_el( &$output, $item, $depth = 0, $args = null ) {
+        $output .= "</li>\n";
+    }
+
+    // End level (sub-menu)
+    function end_lvl( &$output, $depth = 0, $args = null ) {
+        $indent = str_repeat("\t", $depth);
+        $output .= "$indent</ul>\n";
+    }
 }
+
+function menu_hover_dropdown_script() {
+    ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Check if the device is a touchscreen
+            const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+            if (!isTouchDevice) {
+                // For non-touch devices, enable hover functionality
+                const dropdownItems = document.querySelectorAll('.header__nav-item.dropdown');
+
+                dropdownItems.forEach(function (item) {
+                    item.addEventListener('mouseenter', function () {
+                        const menu = this.querySelector('.dropdown-menu');
+                        if (menu) {
+                            menu.style.display = 'block';
+                            menu.style.visibility = 'visible';
+                            menu.style.opacity = '1';
+                        }
+                    });
+
+                    item.addEventListener('mouseleave', function () {
+                        const menu = this.querySelector('.dropdown-menu');
+                        if (menu) {
+                            menu.style.display = 'none';
+                            menu.style.visibility = 'hidden';
+                            menu.style.opacity = '0';
+                        }
+                    });
+                });
+            }
+        });
+    </script>
+    <?php
+}
+add_action('wp_footer', 'menu_hover_dropdown_script');
+
+function enqueue_custom_scripts() {
+    wp_enqueue_script('search-toggle', get_template_directory_uri() . '/js/search.js', array('jquery'), null, true);
+}
+add_action('wp_enqueue_scripts', 'enqueue_custom_scripts');
