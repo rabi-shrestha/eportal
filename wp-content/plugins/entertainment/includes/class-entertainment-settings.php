@@ -27,9 +27,8 @@ class Entertainment_Settings {
         include plugin_dir_path( __FILE__ ) . '../templates/admin-page.php';
     }
 
-    public function tvmage_episodes($search_term, $page) {
-        $show_id = 1;
-        $api_url = "https://api.tvmaze.com/shows/$show_id/episodes"; 
+    public function tvmage_shows($page) {
+        $api_url = "https://api.tvmaze.com/shows?page=$page"; 
 
         $api_key = '9AqM4_NBynH1eGqOxGZjH6Gt0WP0Yyu2';
 
@@ -51,27 +50,25 @@ class Entertainment_Settings {
 
         // Parse the response
         $data = wp_remote_retrieve_body( $response );
-        $episodes = json_decode( $data, true );
+        $tvmaze_shows = json_decode( $data, true );
 
-        // Process and return episodes (you can customize this as needed)
-        if ( ! empty( $episodes ) ) {
-            foreach ( $episodes as $episode ) {
+        $shows_array = array();
 
-                // echo '<pre>';
-                // print_r($episode);
-                // echo '</pre>';
-
-                echo '<h3>' . esc_html( $episode['name'] ) . '</h3>';
-                echo '<p>Season: ' . esc_html( $episode['season'] ) . '</p>';
-                echo '<p>Number: ' . esc_html( $episode['number'] ) . '</p>';
-                // echo '<p>' . esc_html( $episode['id'] ) . '</p>';
-                echo '<p>Type: ' . esc_html( $episode['type'] ) . '</p>';
-                echo '<p>Rating: ' . esc_html( $episode['rating']['average'] ) . '</p>';
-                echo '<img src="' . esc_html( $episode['image']['medium'] ) . '" />';
-                echo $episode['summary'];
+        // Process and return shows (you can customize this as needed)
+        if ( ! empty( $tvmaze_shows ) ) {
+            foreach ( $tvmaze_shows as $tvmaze_show ) {
+                $shows_array[] = array(
+                    'name'      => $tvmaze_show['name'],
+                    'url'       => $tvmaze_show['url'],
+                    'genres'    => $tvmaze_show['genres'],
+                    'rating'    => $tvmaze_show['rating']['average'],
+                    'image'     => $tvmaze_show['image']['medium']
+                );
             }
+
+            return $shows_array;
         } else {
-            return 'No episodes found for this show.';
+            return 'No shows found for this show.';
         }
     }
 
@@ -103,8 +100,10 @@ class Entertainment_Settings {
         if ( ! empty( $episodes ) ) {
             foreach ( $episodes as $episode ) {
                 $show = $episode['show'];
+
                 $shows_array[] = array(
                     'name'       => $show['name'],
+                    'url'       => $show['url'],
                     'type'       => $show['type'],
                     'language'   => $show['language'],
                     'genres'     => $show['genres'],

@@ -211,3 +211,102 @@ function enqueue_custom_scripts() {
     wp_enqueue_script('search-toggle', get_template_directory_uri() . '/js/search.js', array('jquery'), null, true);
 }
 add_action('wp_enqueue_scripts', 'enqueue_custom_scripts');
+
+function get_menu_label_by_url($url) {
+    // Get all menus
+    $menus = get_terms('nav_menu', array('hide_empty' => true));
+
+    foreach ($menus as $menu) {
+        // Get all items in the menu
+        $menu_items = wp_get_nav_menu_items($menu->term_id);
+
+        if ($menu_items) {
+            foreach ($menu_items as $menu_item) {
+                // Compare the menu item URL with the provided URL
+                if (untrailingslashit($menu_item->url) == untrailingslashit($url)) {
+                    return esc_html($menu_item->title); // Return the menu label/title
+                }
+            }
+        }
+    }
+
+    return null; // Return null if no match is found
+}
+
+function get_breadcrumbs() {
+    global $post;
+
+    // Start the breadcrumb with the Home link
+    $breadcrumbs = '<ul class="breadcrumbs">';
+    $breadcrumbs .= '<li class="breadcrumbs__item"><a href="' . home_url() . '">Home</a></li>';
+
+    // If it's a single post or page
+    if (is_singular()) {
+        // Get the post's ancestors (for hierarchical structure like pages)
+        $ancestors = get_post_ancestors($post);
+
+        // Reverse the order of ancestors (from root to parent)
+        if (!empty($ancestors)) {
+            $ancestors = array_reverse($ancestors);
+            foreach ($ancestors as $ancestor) {
+                $breadcrumbs .= '<li class="breadcrumbs__item"><a href="' . get_permalink($ancestor) . '">' . get_the_title($ancestor) . '</a></li>';
+            }
+        }
+
+        // Add the current post/page
+        $breadcrumbs .= '<li class="breadcrumbs__item breadcrumbs__item--active">' . get_the_title($post) . '</li>';
+    }
+
+    // If it's an archive page
+    elseif (is_archive()) {
+        if (is_category() || is_tag()) {
+            $breadcrumbs .= '<li class="breadcrumbs__item breadcrumbs__item--active">' . single_cat_title('', false) . '</li>';
+        } elseif (is_author()) {
+            $breadcrumbs .= '<li class="breadcrumbs__item breadcrumbs__item--active">Author: ' . get_the_author() . '</li>';
+        } elseif (is_date()) {
+            $breadcrumbs .= '<li class="breadcrumbs__item breadcrumbs__item--active">Date Archive: ' . get_the_time('F Y') . '</li>';
+        }
+    }
+
+    // If it's a search results page
+    elseif (is_search()) {
+        $breadcrumbs .= '<li class="breadcrumbs__item breadcrumbs__item--active">Search Results for: ' . get_search_query() . '</li>';
+    }
+
+    // If it's the 404 page
+    elseif (is_404()) {
+        $breadcrumbs .= '<li class="breadcrumbs__item breadcrumbs__item--active">404 Not Found</li>';
+    }
+
+    $breadcrumbs .= '</ul>';
+
+    return $breadcrumbs;
+}
+
+function get_shows($page) {
+    $plugin_instance = new Entertainment_Settings();
+    $shows = $plugin_instance->tvmage_shows($page);
+    return $shows;
+}
+
+function enqueue_load_more_script() {
+    wp_enqueue_script('load-more-shows', get_template_directory_uri() . '/js/load-more.js', array('jquery'), null, true);
+
+    wp_localize_script('load-more-shows', 'ajax_params', array(
+        'ajax_url' => admin_url('admin-ajax.php'), // Dynamically get the correct AJAX URL
+        'nonce' => wp_create_nonce('load_more_shows_nonce') // Pass a nonce for security
+    ));
+}
+add_action('wp_enqueue_scripts', 'enqueue_load_more_script');
+
+function load_more_shows() {
+    check_ajax_referer('load_more_shows', 'nonce');
+
+    $paged = isset($_POST['page']) ? intval($_POST['page']) + 1 : 2;
+    echo $paged;
+    // get_shows($paged);
+
+    wp_die();
+}
+add_action('wp_ajax_load_more_shows', 'load_more_shows');
+add_action('wp_ajax_nopriv_load_more_shows', 'load_more_shows');

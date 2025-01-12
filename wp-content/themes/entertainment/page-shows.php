@@ -12,15 +12,16 @@ get_header();
         <div class="row">
             <div class="col-12">
                 <div class="section__wrap">
+                    <?php
+                        $current_url = home_url(add_query_arg(array(), $wp->request)); 
+                        $menu_label = get_menu_label_by_url($current_url);
+                    ?>
                     <!-- section title -->
-                    <h1 class="section__title section__title--head">Catalog</h1>
+                    <h1 class="section__title section__title--head"><?php echo $menu_label; ?></h1>
                     <!-- end section title -->
 
                     <!-- breadcrumbs -->
-                    <ul class="breadcrumbs">
-                        <li class="breadcrumbs__item"><a href="index.html">Home</a></li>
-                        <li class="breadcrumbs__item breadcrumbs__item--active">Catalog</li>
-                    </ul>
+                   <?php echo get_breadcrumbs(); ?>
                     <!-- end breadcrumbs -->
                 </div>
             </div>
@@ -123,404 +124,39 @@ get_header();
     <div class="section section--catalog">
         <div class="container">
             <div class="row">
-                <!-- item -->
-                <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
-                    <div class="item">
-                        <div class="item__cover">
-                            <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover.jpg" alt="">
-                            <a href="details.html" class="item__play">
-                                <i class="ti ti-player-play-filled"></i>
-                            </a>
-                            <span class="item__rate item__rate--green">8.4</span>
-                            <button class="item__favorite" type="button"><i class="ti ti-bookmark"></i></button>
-                        </div>
-                        <div class="item__content">
-                            <h3 class="item__title"><a href="details.html">I Dream in Another Language</a></h3>
-                            <span class="item__category">
-                                <a href="#">Action</a>
-                                <a href="#">Triler</a>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <!-- end item -->
-
-                <!-- item -->
-                <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
-                    <div class="item">
-                        <div class="item__cover">
-                            <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover2.jpg" alt="">
-                            <a href="details.html" class="item__play">
-                                <i class="ti ti-player-play-filled"></i>
-                            </a>
-                            <span class="item__rate item__rate--green">7.1</span>
-                            <button class="item__favorite" type="button"><i class="ti ti-bookmark"></i></button>
-                        </div>
-                        <div class="item__content">
-                            <h3 class="item__title"><a href="details.html">Benched</a></h3>
-                            <span class="item__category">
-                                <a href="#">Comedy</a>
-                            </span>
+            <?php $shows = get_shows(0); ?>
+                <?php foreach ($shows as $show) : ?>
+                    <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
+                        <div class="item">
+                            <div class="item__cover">
+                                <img src="<?php echo $show['image']; ?>" alt="" />
+                                <?php if (!empty($show['image'])) : ?>
+                                    <img src="<?php echo esc_url($show['image']); ?>" alt="" />
+                                <?php else: ?>
+                                    <img src="<?php echo get_template_directory_uri(); ?>/img/default/default.svg" alt="<?php echo esc_attr($show['name']); ?>" alt="" />
+                                <?php endif; ?>
+                                <a href="<?php echo $show['url']; ?>" class="item__play">
+                                    <i class="ti ti-player-play-filled"></i>
+                                </a>
+                                <?php if (!empty($show['rating'])) : ?>
+                                    <span class="item__rate item__rate--green"><?php echo $show['rating']; ?></span>
+                                <?php endif; ?>
+                            </div>
+                            <div class="item__content">
+                                <h3 class="item__title"><a href="<?php echo $show['url']; ?>"><?php echo esc_html($show['name']); ?></a></h3>
+                                <span class="item__category">
+                                    <?php echo esc_html(implode(', ', $show['genres'])); ?>
+                                </span>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <!-- end item -->
-
-                <!-- item -->
-                <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
-                    <div class="item">
-                        <div class="item__cover">
-                            <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover3.jpg" alt="">
-                            <a href="details.html" class="item__play">
-                                <i class="ti ti-player-play-filled"></i>
-                            </a>
-                            <span class="item__rate item__rate--red">6.3</span>
-                            <button class="item__favorite" type="button"><i class="ti ti-bookmark"></i></button>
-                        </div>
-                        <div class="item__content">
-                            <h3 class="item__title"><a href="details.html">Whitney</a></h3>
-                            <span class="item__category">
-                                <a href="#">Romance</a>
-                                <a href="#">Drama</a>
-                                <a href="#">Music</a>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <!-- end item -->
-
-                <!-- item -->
-                <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
-                    <div class="item">
-                        <div class="item__cover">
-                            <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover4.jpg" alt="">
-                            <a href="details.html" class="item__play">
-                                <i class="ti ti-player-play-filled"></i>
-                            </a>
-                            <span class="item__rate item__rate--yellow">6.9</span>
-                            <button class="item__favorite" type="button"><i class="ti ti-bookmark"></i></button>
-                        </div>
-                        <div class="item__content">
-                            <h3 class="item__title"><a href="details.html">Blindspotting</a></h3>
-                            <span class="item__category">
-                                <a href="#">Comedy</a>
-                                <a href="#">Drama</a>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <!-- end item -->
-
-                <!-- item -->
-                <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
-                    <div class="item">
-                        <div class="item__cover">
-                            <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover5.jpg" alt="">
-                            <a href="details.html" class="item__play">
-                                <i class="ti ti-player-play-filled"></i>
-                            </a>
-                            <span class="item__rate item__rate--green">8.4</span>
-                            <button class="item__favorite" type="button"><i class="ti ti-bookmark"></i></button>
-                        </div>
-                        <div class="item__content">
-                            <h3 class="item__title"><a href="details.html">I Dream in Another Language</a></h3>
-                            <span class="item__category">
-                                <a href="#">Action</a>
-                                <a href="#">Triler</a>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <!-- end item -->
-
-                <!-- item -->
-                <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
-                    <div class="item">
-                        <div class="item__cover">
-                            <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover6.jpg" alt="">
-                            <a href="details.html" class="item__play">
-                                <i class="ti ti-player-play-filled"></i>
-                            </a>
-                            <span class="item__rate item__rate--green">7.1</span>
-                            <button class="item__favorite" type="button"><i class="ti ti-bookmark"></i></button>
-                        </div>
-                        <div class="item__content">
-                            <h3 class="item__title"><a href="details.html">Benched</a></h3>
-                            <span class="item__category">
-                                <a href="#">Comedy</a>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <!-- end item -->
-
-                <!-- item -->
-                <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
-                    <div class="item">
-                        <div class="item__cover">
-                            <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover7.jpg" alt="">
-                            <a href="details.html" class="item__play">
-                                <i class="ti ti-player-play-filled"></i>
-                            </a>
-                            <span class="item__rate item__rate--green">7.1</span>
-                            <button class="item__favorite" type="button"><i class="ti ti-bookmark"></i></button>
-                        </div>
-                        <div class="item__content">
-                            <h3 class="item__title"><a href="details.html">Benched</a></h3>
-                            <span class="item__category">
-                                <a href="#">Comedy</a>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <!-- end item -->
-
-                <!-- item -->
-                <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
-                    <div class="item">
-                        <div class="item__cover">
-                            <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover8.jpg" alt="">
-                            <a href="details.html" class="item__play">
-                                <i class="ti ti-player-play-filled"></i>
-                            </a>
-                            <span class="item__rate item__rate--red">5.5</span>
-                            <button class="item__favorite" type="button"><i class="ti ti-bookmark"></i></button>
-                        </div>
-                        <div class="item__content">
-                            <h3 class="item__title"><a href="details.html">I Dream in Another Language</a></h3>
-                            <span class="item__category">
-                                <a href="#">Action</a>
-                                <a href="#">Triler</a>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <!-- end item -->
-
-                <!-- item -->
-                <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
-                    <div class="item">
-                        <div class="item__cover">
-                            <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover9.jpg" alt="">
-                            <a href="details.html" class="item__play">
-                                <i class="ti ti-player-play-filled"></i>
-                            </a>
-                            <span class="item__rate item__rate--yellow">6.7</span>
-                            <button class="item__favorite" type="button"><i class="ti ti-bookmark"></i></button>
-                        </div>
-                        <div class="item__content">
-                            <h3 class="item__title"><a href="details.html">Blindspotting</a></h3>
-                            <span class="item__category">
-                                <a href="#">Comedy</a>
-                                <a href="#">Drama</a>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <!-- end item -->
-
-                <!-- item -->
-                <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
-                    <div class="item">
-                        <div class="item__cover">
-                            <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover10.jpg" alt="">
-                            <a href="details.html" class="item__play">
-                                <i class="ti ti-player-play-filled"></i>
-                            </a>
-                            <span class="item__rate item__rate--red">5.6</span>
-                            <button class="item__favorite" type="button"><i class="ti ti-bookmark"></i></button>
-                        </div>
-                        <div class="item__content">
-                            <h3 class="item__title"><a href="details.html">Whitney</a></h3>
-                            <span class="item__category">
-                                <a href="#">Romance</a>
-                                <a href="#">Drama</a>
-                                <a href="#">Music</a>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <!-- end item -->
-
-                <!-- item -->
-                <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
-                    <div class="item">
-                        <div class="item__cover">
-                            <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover11.jpg" alt="">
-                            <a href="details.html" class="item__play">
-                                <i class="ti ti-player-play-filled"></i>
-                            </a>
-                            <span class="item__rate item__rate--green">9.2</span>
-                            <button class="item__favorite" type="button"><i class="ti ti-bookmark"></i></button>
-                        </div>
-                        <div class="item__content">
-                            <h3 class="item__title"><a href="details.html">Benched</a></h3>
-                            <span class="item__category">
-                                <a href="#">Comedy</a>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <!-- end item -->
-
-                <!-- item -->
-                <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
-                    <div class="item">
-                        <div class="item__cover">
-                            <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover12.jpg" alt="">
-                            <a href="details.html" class="item__play">
-                                <i class="ti ti-player-play-filled"></i>
-                            </a>
-                            <span class="item__rate item__rate--green">8.4</span>
-                            <button class="item__favorite" type="button"><i class="ti ti-bookmark"></i></button>
-                        </div>
-                        <div class="item__content">
-                            <h3 class="item__title"><a href="details.html">I Dream in Another Language</a></h3>
-                            <span class="item__category">
-                                <a href="#">Action</a>
-                                <a href="#">Triler</a>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <!-- end item -->
-
-                <!-- item -->
-                <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
-                    <div class="item">
-                        <div class="item__cover">
-                            <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover13.jpg" alt="">
-                            <a href="details.html" class="item__play">
-                                <i class="ti ti-player-play-filled"></i>
-                            </a>
-                            <span class="item__rate item__rate--green">8.0</span>
-                            <button class="item__favorite" type="button"><i class="ti ti-bookmark"></i></button>
-                        </div>
-                        <div class="item__content">
-                            <h3 class="item__title"><a href="details.html">I Dream in Another Language</a></h3>
-                            <span class="item__category">
-                                <a href="#">Action</a>
-                                <a href="#">Triler</a>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <!-- end item -->
-
-                <!-- item -->
-                <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
-                    <div class="item">
-                        <div class="item__cover">
-                            <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover14.jpg" alt="">
-                            <a href="details.html" class="item__play">
-                                <i class="ti ti-player-play-filled"></i>
-                            </a>
-                            <span class="item__rate item__rate--green">7.2</span>
-                            <button class="item__favorite" type="button"><i class="ti ti-bookmark"></i></button>
-                        </div>
-                        <div class="item__content">
-                            <h3 class="item__title"><a href="details.html">Benched</a></h3>
-                            <span class="item__category">
-                                <a href="#">Comedy</a>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <!-- end item -->
-
-                <!-- item -->
-                <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
-                    <div class="item">
-                        <div class="item__cover">
-                            <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover15.jpg" alt="">
-                            <a href="details.html" class="item__play">
-                                <i class="ti ti-player-play-filled"></i>
-                            </a>
-                            <span class="item__rate item__rate--yellow">5.9</span>
-                            <button class="item__favorite" type="button"><i class="ti ti-bookmark"></i></button>
-                        </div>
-                        <div class="item__content">
-                            <h3 class="item__title"><a href="details.html">Whitney</a></h3>
-                            <span class="item__category">
-                                <a href="#">Romance</a>
-                                <a href="#">Drama</a>
-                                <a href="#">Music</a>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <!-- end item -->
-
-                <!-- item -->
-                <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
-                    <div class="item">
-                        <div class="item__cover">
-                            <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover16.jpg" alt="">
-                            <a href="details.html" class="item__play">
-                                <i class="ti ti-player-play-filled"></i>
-                            </a>
-                            <span class="item__rate item__rate--green">8.3</span>
-                            <button class="item__favorite" type="button"><i class="ti ti-bookmark"></i></button>
-                        </div>
-                        <div class="item__content">
-                            <h3 class="item__title"><a href="details.html">Blindspotting</a></h3>
-                            <span class="item__category">
-                                <a href="#">Comedy</a>
-                                <a href="#">Drama</a>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <!-- end item -->
-
-                <!-- item -->
-                <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
-                    <div class="item">
-                        <div class="item__cover">
-                            <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover17.jpg" alt="">
-                            <a href="details.html" class="item__play">
-                                <i class="ti ti-player-play-filled"></i>
-                            </a>
-                            <span class="item__rate item__rate--green">8.0</span>
-                            <button class="item__favorite" type="button"><i class="ti ti-bookmark"></i></button>
-                        </div>
-                        <div class="item__content">
-                            <h3 class="item__title"><a href="details.html">I Dream in Another Language</a></h3>
-                            <span class="item__category">
-                                <a href="#">Action</a>
-                                <a href="#">Triler</a>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <!-- end item -->
-
-                <!-- item -->
-                <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
-                    <div class="item">
-                        <div class="item__cover">
-                            <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover18.jpg" alt="">
-                            <a href="details.html" class="item__play">
-                                <i class="ti ti-player-play-filled"></i>
-                            </a>
-                            <span class="item__rate item__rate--green">7.1</span>
-                            <button class="item__favorite" type="button"><i class="ti ti-bookmark"></i></button>
-                        </div>
-                        <div class="item__content">
-                            <h3 class="item__title"><a href="details.html">Benched</a></h3>
-                            <span class="item__category">
-                                <a href="#">Comedy</a>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <!-- end item -->
+                <?php endforeach; ?>
             </div>
 
             <div class="row">
                 <!-- more -->
                 <div class="col-12">
-                    <button class="section__more" type="button">Load more</button>
+                    <button class="section__more" id="load-more-shows" type="button">Load more</button>
                 </div>
                 <!-- end more -->
             </div>

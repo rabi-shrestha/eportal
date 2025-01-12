@@ -256,7 +256,7 @@ body::-webkit-scrollbar-thumb {
   border: none;
 }
 .header__dropdown-menu li {
-  margin-bottom: 15px;
+  /* margin-bottom: 15px; */
   width: 100%;
 }
 .header__dropdown-menu li:last-child {

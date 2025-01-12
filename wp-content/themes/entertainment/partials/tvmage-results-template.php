@@ -1,8 +1,4 @@
 <?php
-/*
-Template Name: Shows Template
-*/
-
 get_header();
 ?>
 
@@ -132,7 +128,7 @@ get_header();
                                 <?php else: ?>
                                     <img src="<?php echo get_template_directory_uri(); ?>/img/default/default.svg" alt="<?php echo esc_attr($show['name']); ?>" alt="" />
                                 <?php endif; ?>
-                                <a href="details.html" class="item__play">
+                                <a href="<?php echo $show['url']; ?>" class="item__play">
                                     <i class="ti ti-player-play-filled"></i>
                                 </a>
                                 <?php if (!empty($show['rating'])) : ?>
@@ -140,7 +136,7 @@ get_header();
                                 <?php endif; ?>
                             </div>
                             <div class="item__content">
-                                <h3 class="item__title"><a href="details.html"><?php echo esc_html($show['name']); ?></a></h3>
+                                <h3 class="item__title"><a href="<?php echo $show['url']; ?>"><?php echo esc_html($show['name']); ?></a></h3>
                                 <span class="item__category">
                                     <?php echo esc_html(implode(', ', $show['genres'])); ?>
                                 </span>
