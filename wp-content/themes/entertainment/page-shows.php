@@ -120,10 +120,9 @@ get_header();
     </div>
     <!-- end filter (fixed position) -->
     
-    <!-- catalog -->
     <div class="section section--catalog">
         <div class="container">
-            <div class="row">
+            <div class="row" id="shows-container">
             <?php $shows = get_shows(0); ?>
                 <?php foreach ($shows as $show) : ?>
                     <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
@@ -154,17 +153,13 @@ get_header();
             </div>
 
             <div class="row">
-                <!-- more -->
                 <div class="col-12">
-                    <button class="section__more" id="load-more-shows" type="button">Load more</button>
+                    <button class="section__more" id="load-more-shows" data-page="1" type="button">Load more</button>
                 </div>
-                <!-- end more -->
             </div>
         </div>
     </div>
-    <!-- end catalog -->
 </div>
-<!-- end fixed filter wrap -->
 
 <!-- section -->
 <section class="section section--border">

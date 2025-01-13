@@ -18,11 +18,14 @@ jQuery(document).ready(function ($) {
                 button.text('Loading...');
             },
             success: function (response) {
-                if (response === 'no more shows') {
-                    button.text('No more shows').prop('disabled', true);
+                if (response.success && response.data.html) {
+                    // Append new shows to the container
+                    $('#shows-container').append(response.data.html);
+                    // Update button text and data-page
+                    button.text('Load More').data('page', nextPage).prop('disabled', false);
                 } else {
-                    $('#shows-container').append(response);
-                    button.text('Load More').data('page', nextPage);
+                    // Handle "no more shows" or error cases
+                    button.text('No more shows').prop('disabled', true);
                 }
             },
         });

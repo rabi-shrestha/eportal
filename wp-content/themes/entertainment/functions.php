@@ -300,11 +300,50 @@ function enqueue_load_more_script() {
 add_action('wp_enqueue_scripts', 'enqueue_load_more_script');
 
 function load_more_shows() {
-    check_ajax_referer('load_more_shows', 'nonce');
+    if (!check_ajax_referer('load_more_shows_nonce', 'nonce', false)) {
+        error_log('Invalid nonce: ' . $_POST['nonce']); // Log the invalid nonce
+        wp_send_json_error('Invalid nonce');
+    }
 
     $paged = isset($_POST['page']) ? intval($_POST['page']) + 1 : 2;
-    echo $paged;
-    // get_shows($paged);
+    $shows = get_shows($paged);
+
+    // Start output buffering
+    ob_start();
+
+    // Generate the HTML directly
+    foreach ($shows as $show) {
+        ?>
+        <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
+            <div class="item">
+                    <div class="item__cover">
+                        <?php if (!empty($show['image'])) : ?>
+                            <img src="<?php echo esc_url($show['image']); ?>" alt="" />
+                        <?php else: ?>
+                            <img src="<?php echo get_template_directory_uri(); ?>/img/default/default.svg" alt="<?php echo esc_attr($show['name']); ?>" alt="" />
+                        <?php endif; ?>
+                        <a href="<?php echo $show['url']; ?>" class="item__play">
+                            <i class="ti ti-player-play-filled"></i>
+                        </a>
+                        <?php if (!empty($show['rating'])) : ?>
+                            <span class="item__rate item__rate--green"><?php echo $show['rating']; ?></span>
+                        <?php endif; ?>
+                    </div>
+                    <div class="item__content">
+                        <h3 class="item__title"><a href="<?php echo $show['url']; ?>"><?php echo esc_html($show['name']); ?></a></h3>
+                        <span class="item__category">
+                            <?php echo esc_html(implode(', ', $show['genres'])); ?>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        <?php
+    }
+
+    // Get the buffered content as a string
+    $html = ob_get_clean();
+
+    wp_send_json_success(['html' => $html, 'page' => $paged]);
 
     wp_die();
 }
