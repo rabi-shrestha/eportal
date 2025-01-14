@@ -142,7 +142,7 @@ get_header();
                                 <?php endif; ?>
                             </div>
                             <div class="item__content">
-                                <h3 class="item__title"><a href="<?php echo $show['url']; ?>"><?php echo esc_html($show['name']); ?></a></h3>
+                                <h3 class="item__title"><a href="<?php echo site_url($show['url']); ?>"><?php echo esc_html($show['name']); ?></a></h3>
                                 <span class="item__category">
                                     <?php echo esc_html(implode(', ', $show['genres'])); ?>
                                 </span>
