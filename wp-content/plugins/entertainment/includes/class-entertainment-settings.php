@@ -30,7 +30,7 @@ class Entertainment_Settings {
     public function tvmage_shows($page) {
         $api_url = "https://api.tvmaze.com/shows?page=$page"; 
 
-        $api_key = '9AqM4_NBynH1eGqOxGZjH6Gt0WP0Yyu2';
+        $api_key = entertainment_plugin_get_api_key();
 
         $args = array(
             'method'    => 'GET',
@@ -78,7 +78,7 @@ class Entertainment_Settings {
     public function tvmage_search_result($search_term) {
         $api_url = "https://api.tvmaze.com/search/shows?q=$search_term"; 
 
-        $api_key = '9AqM4_NBynH1eGqOxGZjH6Gt0WP0Yyu2';
+        $api_key = entertainment_plugin_get_api_key();
 
         $args = array(
             'method'    => 'GET',
@@ -131,7 +131,7 @@ class Entertainment_Settings {
     public function tvmage_show_details($id) {
         $api_url = "https://api.tvmaze.com/shows/$id";
         
-        $api_key = '9AqM4_NBynH1eGqOxGZjH6Gt0WP0Yyu2';
+        $api_key = entertainment_plugin_get_api_key();
 
         $args = array(
             'method'    => 'GET',

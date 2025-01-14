@@ -322,7 +322,7 @@ function load_more_shows() {
                         <?php else: ?>
                             <img src="<?php echo get_template_directory_uri(); ?>/img/default/default.svg" alt="<?php echo esc_attr($show['name']); ?>" alt="" />
                         <?php endif; ?>
-                        <a href="<?php echo $show['url']; ?>" class="item__play">
+                        <a href="<?php echo site_url($show['url']); ?>" class="item__play">
                             <i class="ti ti-player-play-filled"></i>
                         </a>
                         <?php if (!empty($show['rating'])) : ?>
@@ -330,7 +330,7 @@ function load_more_shows() {
                         <?php endif; ?>
                     </div>
                     <div class="item__content">
-                        <h3 class="item__title"><a href="<?php echo $show['url']; ?>"><?php echo esc_html($show['name']); ?></a></h3>
+                        <h3 class="item__title"><a href="<?php echo site_url($show['url']); ?>"><?php echo esc_html($show['name']); ?></a></h3>
                         <span class="item__category">
                             <?php echo esc_html(implode(', ', $show['genres'])); ?>
                         </span>
@@ -384,3 +384,15 @@ add_action('template_redirect', function () {
 /**
  * For getting show details
  */
+
+ add_filter('pre_get_document_title', function ($title) {
+    if (is_page()) { // Check if it's a page
+        $title = get_the_title(); // Get the current page title
+    } elseif (is_single()) { // For single posts
+        $title = single_post_title('', false);
+    } elseif (is_home() || is_front_page()) { // For the homepage
+        $title = "Welcome to " . get_bloginfo('name') . " - Home";
+    }
+
+    return $title;
+}); 
