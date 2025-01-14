@@ -134,7 +134,7 @@ get_header();
                                 <?php else: ?>
                                     <img src="<?php echo get_template_directory_uri(); ?>/img/default/default.svg" alt="<?php echo esc_attr($show['name']); ?>" alt="" />
                                 <?php endif; ?>
-                                <a href="<?php echo $show['url']; ?>" class="item__play">
+                                <a href="<?php echo site_url($show['url']); ?>" class="item__play">
                                     <i class="ti ti-player-play-filled"></i>
                                 </a>
                                 <?php if (!empty($show['rating'])) : ?>
@@ -212,7 +212,7 @@ get_header();
                                 <div class="item item--carousel">
                                     <div class="item__cover">
                                         <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover2.jpg" alt="">
-                                        <a href="details.html" class="item__play">
+                                        <a href="<?php echo site_url(); ?>" class="item__play">
                                             <i class="ti ti-player-play-filled"></i>
                                         </a>
                                         <span class="item__rate item__rate--green">7.1</span>

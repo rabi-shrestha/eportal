@@ -349,3 +349,38 @@ function load_more_shows() {
 }
 add_action('wp_ajax_load_more_shows', 'load_more_shows');
 add_action('wp_ajax_nopriv_load_more_shows', 'load_more_shows');
+
+/**
+ * For getting show details
+ */
+add_action('init', function () {
+    // Add a rewrite rule to map `/shows/{id}/{slug}` to query variables
+    add_rewrite_rule('^shows/([0-9]+)/([^/]+)/?$', 'index.php?show_id=$matches[1]&show_slug=$matches[2]', 'top');
+});
+
+// Register custom query variables to capture `show_id` and `show_slug`
+add_filter('query_vars', function ($vars) {
+    $vars[] = 'show_id';
+    $vars[] = 'show_slug';
+    return $vars;
+});
+
+add_action('init', function () {
+    if (get_option('my_rewrite_rules_flushed') !== '1') {
+        flush_rewrite_rules();
+        update_option('my_rewrite_rules_flushed', '1');
+    }
+});
+
+add_action('template_redirect', function () {
+    $show_id = get_query_var('show_id');
+    $show_slug = get_query_var('show_slug');
+
+    if ($show_id && $show_slug) {
+        include locate_template('single-show.php');
+        exit;
+    }
+});
+/**
+ * For getting show details
+ */

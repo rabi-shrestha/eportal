@@ -57,9 +57,12 @@ class Entertainment_Settings {
         // Process and return shows (you can customize this as needed)
         if ( ! empty( $tvmaze_shows ) ) {
             foreach ( $tvmaze_shows as $tvmaze_show ) {
+                $tvmaze_url = "https://www.tvmaze.com";
+                $relative_path = str_replace($tvmaze_url, '', $tvmaze_show['url']);
                 $shows_array[] = array(
+                    'id'      => $tvmaze_show['id'],
                     'name'      => $tvmaze_show['name'],
-                    'url'       => $tvmaze_show['url'],
+                    'url'       => $relative_path,
                     'genres'    => $tvmaze_show['genres'],
                     'rating'    => $tvmaze_show['rating']['average'],
                     'image'     => $tvmaze_show['image']['medium']
@@ -123,6 +126,30 @@ class Entertainment_Settings {
         } else {
             return 'No episodes found for this show.';
         }
+    }
+
+    public function tvmage_show_details($id) {
+        $api_url = "https://api.tvmaze.com/shows/$id";
+        
+        $api_key = '9AqM4_NBynH1eGqOxGZjH6Gt0WP0Yyu2';
+
+        $args = array(
+            'method'    => 'GET',
+            'timeout'   => 15,
+            'headers'   => array(
+                'Authorization' => 'Bearer ' . $api_key,
+                'Content-Type'  => 'application/json',
+            ),
+        );
+
+        $response = wp_remote_get( $api_url, $args );
+
+        if (is_wp_error($response)) {
+            return null; // Handle API errors
+        }
+
+        $data = wp_remote_retrieve_body($response);
+        return json_decode($data, true);
     }
 
     public function get_cloaked_image_url($external_image_url, $image_type) {
