@@ -14,6 +14,14 @@
                         <a href="contacts.html">Contacts</a>
                         <a href="privacy.html">Privacy policy</a>
                     </nav>
+                    <?php
+                    wp_nav_menu(array(
+                        'theme_location' => 'footer-menu',
+                        'container' => 'nav',
+                        'menu_class' => 'footer__nav',
+                        'fallback_cb' => false, // Fallback if no menu is assigned
+                    ));
+                    ?>
 
                     <button class="footer__back" type="button">
                         <i class="ti ti-arrow-narrow-up"></i>

@@ -61,11 +61,11 @@ class Entertainment_Settings {
                 $relative_path = str_replace($tvmaze_url, '', $tvmaze_show['url']);
                 $shows_array[] = array(
                     'id'      => $tvmaze_show['id'],
-                    'name'      => $tvmaze_show['name'],
-                    'url'       => $relative_path,
-                    'genres'    => $tvmaze_show['genres'],
-                    'rating'    => $tvmaze_show['rating']['average'],
-                    'image'     => $tvmaze_show['image']['medium']
+                    'name'    => $tvmaze_show['name'],
+                    'url'     => $relative_path,
+                    'genres'  => $tvmaze_show['genres'],
+                    'rating'  => $tvmaze_show['rating']['average'],
+                    'image'   => $tvmaze_show['image']['medium']
                 );
             }
 

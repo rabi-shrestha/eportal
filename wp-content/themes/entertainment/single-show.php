@@ -50,6 +50,26 @@ if ($show_details && sanitize_title($show_details['name']) !== $show_slug) {
                 <!-- content -->
                 <div class="col-12 col-xl-6">
                     <div class="item item--details">
+                        <?php 
+                            $plugin_instance = new Entertainment_Service();
+                            $show_detail = $plugin_instance->get_show_by_id($show_details['id']);
+
+                            if ( is_wp_error( $show_detail ) ) {
+                                // Handle the error returned by the function
+                                echo '<p>Error: ' . $show_detail->get_error_message() . '</p>';
+                            } else {
+                                // Use the empty() function to check if the result contains data
+                                $check = empty( $show_detail );
+                            
+                                if ( $check ) {
+                                    $show = $plugin_instance->insert_show_detail($show_details);
+
+                                    if ( !empty($show )) {
+                                        //Create post on Facebook
+                                    }
+                                }
+                            }
+                        ?>
                         <div class="row">
                             <!-- card cover -->
                             <div class="col-12 col-sm-5 col-md-5 col-lg-4 col-xl-6 col-xxl-5">

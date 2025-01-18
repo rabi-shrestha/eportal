@@ -22,7 +22,7 @@ function entertainment_plugin_get_api_key() {
     // Access the API key defined in the config file
     if (defined('MY_API_KEY')) {
         return MY_API_KEY;
-    }
+    }   
     return null;
 }
 
@@ -37,6 +37,13 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/class-entertainment-plugin.
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-entertainment-shortcode.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-entertainment-settings.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-entertainment-cpt.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-entertainment-table.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-entertainment-service.php';
+
+register_activation_hook( __FILE__, function() {
+    $table_creator = new Entertainment_Table();
+    $table_creator->on_activation();
+});
 
 // Initialize the plugin
 function entertainment_plugin_init() {

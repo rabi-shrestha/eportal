@@ -15,6 +15,8 @@ class Entertainment_Plugin {
          new Entertainment_Shortcode();
          new Entertainment_Settings();
          new Entertainment_CPT();
+         new Entertainment_Table();
+         new Entertainment_Service();
     }
     
     public function run() {

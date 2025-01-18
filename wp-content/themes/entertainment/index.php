@@ -13,8 +13,6 @@ if (have_posts()) :
         </article>
         <?php
     endwhile;
-else :
-    echo 'No posts found.';
 endif;
 
 get_footer(); // Include footer.php
