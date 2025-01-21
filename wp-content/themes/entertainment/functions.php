@@ -401,3 +401,48 @@ function register_footer_menu() {
     register_nav_menu('footer-menu', __('Footer Menu'));
 }
 add_action('init', 'register_footer_menu');
+
+function enqueue_genre_filter_script() {
+    wp_enqueue_script('genre-filter', get_template_directory_uri() . '/js/search-result.js', ['jquery'], null, true);
+
+    wp_localize_script('genre-filter', 'ajaxObject', [
+        'ajaxurl' => admin_url('admin-ajax.php'),
+    ]);
+}
+add_action('wp_enqueue_scripts', 'enqueue_genre_filter_script');
+
+function handle_genre_filter() {
+    // Get the genre from the request
+    $genre_id = isset($_POST['genre']) ? sanitize_text_field($_POST['genre']) : 0;
+
+    if ($genre_id > 0) {
+        $args['query'] = [
+            'key'     => 'genre_id',
+            'value'   => $genre_id,
+            'size'    => -1
+        ];
+
+        $genreObj = new Entertainment_Service();
+        $genre_filter = $genreObj->get_show_by_genre($args);
+    }
+
+    // $query = new WP_Query($args);
+
+    // // Output the results
+    // if ($query->have_posts()) {
+    //     while ($query->have_posts()) {
+    //         $query->the_post();
+    //         echo '<div class="post-item">';
+    //         echo '<h3>' . get_the_title() . '</h3>';
+    //         echo '<p>' . get_the_excerpt() . '</p>';
+    //         echo '</div>';
+    //     }
+    // } else {
+    //     echo '<p>No results found.</p>';
+    // }
+
+    wp_die(); // End the AJAX request
+}
+add_action('wp_ajax_filter_genre', 'handle_genre_filter');
+add_action('wp_ajax_nopriv_filter_genre', 'handle_genre_filter');
+

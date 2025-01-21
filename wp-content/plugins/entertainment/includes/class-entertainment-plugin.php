@@ -17,6 +17,7 @@ class Entertainment_Plugin {
          new Entertainment_CPT();
          new Entertainment_Table();
          new Entertainment_Service();
+         new Entertainment_Facebook();
     }
     
     public function run() {

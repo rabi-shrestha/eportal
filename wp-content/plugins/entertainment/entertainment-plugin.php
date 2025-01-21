@@ -18,17 +18,49 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once plugin_dir_path(__FILE__) . 'api-key-config.php';
 
 // Example function to demonstrate the API key usage
-function entertainment_plugin_get_api_key() {
+function tvmage_api_key() {
     // Access the API key defined in the config file
-    if (defined('MY_API_KEY')) {
-        return MY_API_KEY;
+    if (defined('TVMAGE_API_KEY')) {
+        return TVMAGE_API_KEY;
+    }   
+    return null;
+}
+
+function facebook_api_key() {
+    // Access the API key defined in the config file
+    if (defined('FACEBOOK_API_KEY')) {
+        return FACEBOOK_API_KEY;
+    }   
+    return null;
+}
+
+function facebook_page_id() {
+    // Access the API key defined in the config file
+    if (defined('FACEBOOK_PAGE_ID')) {
+        return FACEBOOK_PAGE_ID;
+    }   
+    return null;
+}
+
+function facebook_app_id() {
+    // Access the API key defined in the config file
+    if (defined('FACEBOOK_APP_ID')) {
+        return FACEBOOK_APP_ID;
+    }   
+    return null;
+}
+
+function facebook_app_secret() {
+    // Access the API key defined in the config file
+    if (defined('FACEBOOK_APP_SECRET')) {
+        return FACEBOOK_APP_SECRET;
     }   
     return null;
 }
 
 // Example shortcode to display the API key (remove this in production for security)
 add_shortcode('show_api_key', function () {
-    $api_key = entertainment_plugin_get_api_key();
+    $api_key = tvmage_api_key();
     return $api_key ? "Your API Key: " . esc_html($api_key) : "API Key not set.";
 });
 
@@ -39,6 +71,7 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/class-entertainment-setting
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-entertainment-cpt.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-entertainment-table.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-entertainment-service.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-entertainment-facebook.php';
 
 register_activation_hook( __FILE__, function() {
     $table_creator = new Entertainment_Table();

@@ -51,8 +51,8 @@ if ($show_details && sanitize_title($show_details['name']) !== $show_slug) {
                 <div class="col-12 col-xl-6">
                     <div class="item item--details">
                         <?php 
-                            $plugin_instance = new Entertainment_Service();
-                            $show_detail = $plugin_instance->get_show_by_id($show_details['id']);
+                            $entertainment_service = new Entertainment_Service();
+                            $show_detail = $entertainment_service->get_show_by_id($show_details['id']);
 
                             if ( is_wp_error( $show_detail ) ) {
                                 // Handle the error returned by the function
@@ -62,10 +62,19 @@ if ($show_details && sanitize_title($show_details['name']) !== $show_slug) {
                                 $check = empty( $show_detail );
                             
                                 if ( $check ) {
-                                    $show = $plugin_instance->insert_show_detail($show_details);
+                                    $inserted_id = $entertainment_service->insert_show_detail($show_details);
 
-                                    if ( !empty($show )) {
+                                    if ( is_wp_error( $inserted_id ) ) {
+                                        echo '<p>Error: ' . $inserted_id->get_error_message() . '</p>';
+                                    } else {
                                         //Create post on Facebook
+                                        $fbpost = new Entertainment_Facebook();
+
+                                        $app_id = facebook_app_id();
+                                        $app_secret = facebook_app_secret();
+                                        $token = $fbpost->renew_facebook_token($app_id, $app_secret);
+
+                                        $fbpost->create_facebook_post($show_details, $token);
                                     }
                                 }
                             }

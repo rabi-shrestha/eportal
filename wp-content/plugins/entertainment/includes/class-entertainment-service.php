@@ -50,9 +50,11 @@ class Entertainment_Service {
             return new WP_Error( 'invalid_data', 'Show ID and Show Name are required.' );
         }
 
+        $id = wp_generate_uuid4();
+
         // Prepare the data
         $data = array(
-            'id'        => wp_generate_uuid4(), // Generate a unique ID for the `id` column
+            'id'        => $id, // Generate a unique ID for the `id` column
             'show_id'   => $show_details['id'],
             'show_name' => $show_details['name'],
             'created_at' => current_time( 'mysql' ), // Use WordPress's current time
@@ -69,6 +71,23 @@ class Entertainment_Service {
             return new WP_Error( 'db_insert_error', 'Could not insert data into the database.' );
         }
 
-        return $wpdb->insert_id;
+        return $id;
+    }
+
+    public function get_show_by_genre($genre) {
+        $genre_detail = $genre['query'];
+
+        $entertainmentObj = new Entertainment_Settings();
+        $shows = $entertainmentObj->tvmage_shows();
+
+        $shows_by_genre = array_filter($shows, function ($show) use ($genre) {
+            // return in_array($genre, $show['genres'], true);
+        });
+        
+        echo '<pre>';
+        print_r($shows_by_genre);
+        echo '</pre>';
+
+        wp_die();
     }
 }
