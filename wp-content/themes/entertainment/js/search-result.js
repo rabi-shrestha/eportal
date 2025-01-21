@@ -12,6 +12,7 @@ jQuery(document).ready(function ($) {
             beforeSend: function () {
                 // Optional: Add a loading spinner or disable the dropdown
                 $('#filter__genre').prop('disabled', true);
+                $('.preloader').html('<div id="preloader"><div class="spinner"></div></div>');
             },
             success: function (response) {
                 $('#shows-container').html(response); // Replace results with response
@@ -19,6 +20,7 @@ jQuery(document).ready(function ($) {
             complete: function () {
                 // Re-enable the dropdown
                 $('#filter__genre').prop('disabled', false);
+                $('.preloader').html('');
             },
         });
     });

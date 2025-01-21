@@ -74,20 +74,52 @@ class Entertainment_Service {
         return $id;
     }
 
+    public function get_genre_list() {
+        $genres = [
+            "" => "All genres",
+            "Action" => "Action",
+            "Adventure" => "Adventure",
+            "Animation" => "Animation",
+            "Anime" => "Anime",
+            "Children" => "Children",
+            "Comedy" => "Comedy",
+            "Crime" => "Crime",
+            "DIY" => "DIY",
+            "Drama" => "Drama",
+            "Espionage" => "Espionage",
+            "Family" => "Family",
+            "Fantasy" => "Fantasy",
+            "Food" => "Food",
+            "History" => "History",
+            "Horror" => "Horror",
+            "Legal" => "Legal",
+            "Medical" => "Medical",
+            "Music" => "Music",
+            "Mystery" => "Mystery",
+            "Reality" => "Reality",
+            "Romance" => "Romance",
+            "Science-Fiction" => "Science-Fiction",
+            "Sports" => "Sports",
+            "Supernatural" => "Supernatural",
+            "Thriller" => "Thriller",
+            "War" => "War",
+            "Western" => "Western"
+        ];
+        return $genres;
+    }
+
     public function get_show_by_genre($genre) {
-        $genre_detail = $genre['query'];
+        $genre_detail = $genre['query']['value'];
 
         $entertainmentObj = new Entertainment_Settings();
         $shows = $entertainmentObj->tvmage_shows();
 
-        $shows_by_genre = array_filter($shows, function ($show) use ($genre) {
-            // return in_array($genre, $show['genres'], true);
-        });
-        
-        echo '<pre>';
-        print_r($shows_by_genre);
-        echo '</pre>';
+        $shows_by_genre = array_filter($shows, function ($show) use ($genre_detail) {
+           $genre = in_array($genre_detail, $show['genres'], true);
 
-        wp_die();
+            return $genre;
+        });
+
+        return $shows_by_genre;
     }
 }

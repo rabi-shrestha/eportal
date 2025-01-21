@@ -6,8 +6,8 @@
 
     <?php wp_head(); ?>
 </head>
-<body>    
-
+<body>  
+	<div class="preloader"></div>
     <header class="header">
 		<div class="container">
 			<div class="row">

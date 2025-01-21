@@ -29,6 +29,7 @@ function entertainment_enqueue_scripts() {
     wp_enqueue_style('default-skin', get_template_directory_uri() . '/css/default-skin.css');
     wp_enqueue_style('main', get_template_directory_uri() . '/css/main.css');
     wp_enqueue_style('icons', get_template_directory_uri() . '/webfont/tabler-icons.min.css');
+    wp_enqueue_style('preloader', get_template_directory_uri() . '/css/preloader.css');
 
     // Deregister the default jQuery from WordPress
     wp_deregister_script('jquery');
@@ -88,8 +89,6 @@ function entertainment_custom_search($query) {
             
             if (!empty($search_result)) {
                 include locate_template('partials/tvmage-results-template.php');
-            } else {
-                echo '<p>No results found for "' . esc_html($search_term) . '".</p>';
             }
         }
     }
@@ -423,26 +422,53 @@ function handle_genre_filter() {
         ];
 
         $genreObj = new Entertainment_Service();
-        $genre_filter = $genreObj->get_show_by_genre($args);
+        $shows_by_genre = $genreObj->get_show_by_genre($args);
+
+        // Start output buffering
+        ob_start();
+
+        // Generate the HTML directly
+        foreach ($shows_by_genre as $show) {
+            ?>
+            <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
+                <div class="item">
+                        <div class="item__cover">
+                            <?php if (!empty($show['image'])) : ?>
+                                <img src="<?php echo esc_url($show['image']); ?>" alt="" />
+                            <?php else: ?>
+                                <img src="<?php echo get_template_directory_uri(); ?>/img/default/default.svg" alt="<?php echo esc_attr($show['name']); ?>" alt="" />
+                            <?php endif; ?>
+                            <a href="<?php echo site_url($show['url']); ?>" class="item__play">
+                                <i class="ti ti-player-play-filled"></i>
+                            </a>
+                            <?php if (!empty($show['rating'])) : ?>
+                                <span class="item__rate item__rate--green"><?php echo $show['rating']; ?></span>
+                            <?php endif; ?>
+                        </div>
+                        <div class="item__content">
+                            <h3 class="item__title"><a href="<?php echo site_url($show['url']); ?>"><?php echo esc_html($show['name']); ?></a></h3>
+                            <span class="item__category">
+                                <?php echo esc_html(implode(', ', $show['genres'])); ?>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            <?php
+        }
+    
+        // Get the buffered content as a string
+        $html = ob_get_clean();
+
+        echo $html;
     }
-
-    // $query = new WP_Query($args);
-
-    // // Output the results
-    // if ($query->have_posts()) {
-    //     while ($query->have_posts()) {
-    //         $query->the_post();
-    //         echo '<div class="post-item">';
-    //         echo '<h3>' . get_the_title() . '</h3>';
-    //         echo '<p>' . get_the_excerpt() . '</p>';
-    //         echo '</div>';
-    //     }
-    // } else {
-    //     echo '<p>No results found.</p>';
-    // }
 
     wp_die(); // End the AJAX request
 }
 add_action('wp_ajax_filter_genre', 'handle_genre_filter');
 add_action('wp_ajax_nopriv_filter_genre', 'handle_genre_filter');
 
+function get_genre_list() {
+    $plugin_instance = new Entertainment_Service();
+    $genres = $plugin_instance->get_genre_list();
+    return $genres;
+}

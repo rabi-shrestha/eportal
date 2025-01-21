@@ -70,8 +70,6 @@ class Entertainment_Settings {
             }
 
             return $shows_array;
-        } else {
-            return 'No shows found for this show.';
         }
     }
 
@@ -122,9 +120,8 @@ class Entertainment_Settings {
                                            : null,
                 );
             }
+            
             return $shows_array;
-        } else {
-            return 'No episodes found for this show.';
         }
     }
 
