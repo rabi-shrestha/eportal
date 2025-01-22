@@ -7,7 +7,6 @@
     <?php wp_head(); ?>
 </head>
 <body>  
-	<div class="preloader"></div>
     <header class="header">
 		<div class="container">
 			<div class="row">

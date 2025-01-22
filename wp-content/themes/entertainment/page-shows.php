@@ -38,6 +38,7 @@ get_header();
     
     <div class="section section--catalog">
         <div class="container">
+            <div class="preloader"></div>
             <div class="row" id="shows-container">
             <?php $shows = get_shows(0); ?>
                 <?php foreach ($shows as $show) : ?>
