@@ -26,7 +26,7 @@ define( 'DB_NAME', 'eportal' );
 define( 'DB_USER', 'root' );
 
 /** Database password */
-define( 'DB_PASSWORD', '' );
+define( 'DB_PASSWORD', 'Rabi@980' );
 
 /** Database hostname */
 define( 'DB_HOST', 'localhost' );
