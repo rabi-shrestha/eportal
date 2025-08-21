@@ -10,7 +10,8 @@ $show_id = get_query_var('show_id');
 $show_slug = get_query_var('show_slug');
 
 // Fetch the show details
-function fetch_show_details($id) {
+function fetch_show_details($id)
+{
     $api_url = "https://api.tvmaze.com/shows/$id";
     $response = wp_remote_get($api_url);
 
@@ -33,11 +34,13 @@ if ($show_details && sanitize_title($show_details['name']) !== $show_slug) {
 ?>
 
 <section class="section section--details">
-		<!-- details background -->
-    <div class="section__details-bg" data-bg="<?php echo get_template_directory_uri(); ?>/img/bg/details__bg.jpg" style="background: url(<?php echo get_template_directory_uri(); ?>/img/bg/details__bg.jpg) center center / cover no-repeat;"></div>
-		<!-- end details background -->
+    <!-- details background -->
+    <div class="section__details-bg" data-bg="<?php echo get_template_directory_uri(); ?>/img/bg/details__bg.jpg"
+        style="background: url(<?php echo get_template_directory_uri(); ?>/img/bg/details__bg.jpg) center center / cover no-repeat;">
+    </div>
+    <!-- end details background -->
 
-		<!-- details content -->
+    <!-- details content -->
     <div class="container">
         <?php if ($show_details): ?>
             <div class="row">
@@ -50,41 +53,42 @@ if ($show_details && sanitize_title($show_details['name']) !== $show_slug) {
                 <!-- content -->
                 <div class="col-12 col-xl-6">
                     <div class="item item--details">
-                        <?php 
-                            $entertainment_service = new Entertainment_Service();
-                            $show_detail = $entertainment_service->get_show_by_id($show_details['id']);
+                        <?php
+                        $entertainment_service = new Entertainment_Service();
+                        $show_detail = $entertainment_service->get_show_by_id($show_details['id']);
 
-                            if ( is_wp_error( $show_detail ) ) {
-                                // Handle the error returned by the function
-                                echo '<p>Error: ' . $show_detail->get_error_message() . '</p>';
-                            } else {
-                                // Use the empty() function to check if the result contains data
-                                $check = empty( $show_detail );
-                            
-                                if ( $check ) {
-                                    $inserted_id = $entertainment_service->insert_show_detail($show_details);
+                        if (is_wp_error($show_detail)) {
+                            // Handle the error returned by the function
+                            echo '<p>Error: ' . $show_detail->get_error_message() . '</p>';
+                        } else {
+                            // Use the empty() function to check if the result contains data
+                            $check = empty($show_detail);
 
-                                    if ( is_wp_error( $inserted_id ) ) {
-                                        echo '<p>Error: ' . $inserted_id->get_error_message() . '</p>';
-                                    } else {
-                                        //Create post on Facebook
-                                        $fbpost = new Entertainment_Facebook();
+                            if ($check) {
+                                $inserted_id = $entertainment_service->insert_show_detail($show_details);
 
-                                        $app_id = facebook_app_id();
-                                        $app_secret = facebook_app_secret();
-                                        $token = $fbpost->renew_facebook_token($app_id, $app_secret);
+                                if (is_wp_error($inserted_id)) {
+                                    echo '<p>Error: ' . $inserted_id->get_error_message() . '</p>';
+                                } else {
+                                    //Create post on Facebook
+                                    $fbpost = new Entertainment_Facebook();
 
-                                        $fbpost->create_facebook_post($show_details, $token);
-                                    }
+                                    $app_id = facebook_app_id();
+                                    $app_secret = facebook_app_secret();
+                                    $token = $fbpost->renew_facebook_token($app_id, $app_secret);
+
+                                    $fbpost->create_facebook_post($show_details, $token);
                                 }
                             }
+                        }
                         ?>
                         <div class="row">
                             <!-- card cover -->
                             <div class="col-12 col-sm-5 col-md-5 col-lg-4 col-xl-6 col-xxl-5">
                                 <div class="item__cover">
                                     <img src="<?php echo esc_url($show_details['image']['medium']); ?>" alt="">
-                                    <span class="item__rate item__rate--green"><?php echo esc_html($show_details['rating']['average'] ?? 'N/A'); ?></span>
+                                    <span
+                                        class="item__rate item__rate--green"><?php echo esc_html($show_details['rating']['average'] ?? 'N/A'); ?></span>
                                 </div>
                             </div>
                             <!-- end card cover -->
@@ -94,16 +98,24 @@ if ($show_details && sanitize_title($show_details['name']) !== $show_slug) {
                                 <div class="item__content">
                                     <ul class="item__meta">
                                         <li><span>Director:</span> <a href="actor.html">Vince Gilligan</a></li>
-                                        <li><span>Cast:</span> <a href="actor.html">Brian Cranston</a> <a href="actor.html">Jesse Plemons</a> <a href="actor.html">Matt Jones</a> <a href="actor.html">Jonathan Banks</a> <a href="actor.html">Charles Baker</a> <a href="actor.html">Tess Harper</a></li>
-                                        <li><span>Genre:</span> <?php echo esc_html(implode(', ', $show_details['genres'] ?? [])); ?></li>
+                                        <li><span>Cast:</span> <a href="actor.html">Brian Cranston</a> <a
+                                                href="actor.html">Jesse Plemons</a> <a href="actor.html">Matt Jones</a> <a
+                                                href="actor.html">Jonathan Banks</a> <a href="actor.html">Charles Baker</a>
+                                            <a href="actor.html">Tess Harper</a>
+                                        </li>
+                                        <li><span>Genre:</span>
+                                            <?php echo esc_html(implode(', ', $show_details['genres'] ?? [])); ?></li>
                                         <li><span>Language:</span> <?php echo esc_html($show_details['language']); ?></li>
                                         <li><span>Premiere:</span> <?php echo esc_html($show_details['premiered']); ?></li>
-                                        <li><span>Running time:</span> <?php echo esc_html($show_details['runtime']); ?></li>
-                                        <li><span>Country:</span> <a href="catalog.html"><?php echo esc_html($show_details['network']['country']['name']); ?></a></li>
+                                        <li><span>Running time:</span> <?php echo esc_html($show_details['runtime']); ?>
+                                        </li>
+                                        <li><span>Country:</span> <a
+                                                href="catalog.html"><?php echo esc_html($show_details['network']['country']['name']); ?></a>
+                                        </li>
                                     </ul>
 
                                     <div class="item__description">
-                                    <?php echo $show_details['summary']; ?>
+                                        <?php echo $show_details['summary']; ?>
                                     </div>
                                 </div>
                             </div>
@@ -114,21 +126,51 @@ if ($show_details && sanitize_title($show_details['name']) !== $show_slug) {
                 <!-- end content -->
 
                 <!-- player -->
+
+                <style>
+                    .section__player {
+                        position: relative;
+                        width: 100%;
+                        max-width: 800px;
+                        /* optional */
+                        aspect-ratio: 16 / 9;
+                        /* keeps video ratio */
+                        background: #000;
+                        border-radius: 12px;
+                        /* optional for style */
+                        overflow: hidden;
+                    }
+
+                    .section__player video {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                        /* ensures poster and video scale evenly */
+                        display: block;
+                    }
+                </style>
+
                 <div class="col-12 col-xl-6">
                     <div class="section__player">
-                        <video controls crossorigin playsinline poster="../../cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.jpg" id="player">
+                        <video controls crossorigin playsinline
+                            poster="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.jpg" id="player">
                             <!-- Video files -->
-                            <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4" type="video/mp4" size="576">
-                            <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-720p.mp4" type="video/mp4" size="720">
-                            <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-1080p.mp4" type="video/mp4" size="1080">
+                            <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4"
+                                type="video/mp4" size="576">
+                            <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-720p.mp4"
+                                type="video/mp4" size="720">
+                            <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-1080p.mp4"
+                                type="video/mp4" size="1080">
 
                             <!-- Caption files -->
-                            <track kind="captions" label="English" srclang="en" src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.en.vtt"
-                                default>
-                            <track kind="captions" label="Français" srclang="fr" src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.fr.vtt">
+                            <track kind="captions" label="English" srclang="en"
+                                src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.en.vtt" default>
+                            <track kind="captions" label="Français" srclang="fr"
+                                src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.fr.vtt">
 
-                            <!-- Fallback for browsers that don't support the <video> element -->
-                            <a href="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4" download>Download</a>
+                            <!-- Fallback -->
+                            <a href="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4"
+                                download>Download</a>
                         </video>
                     </div>
 
@@ -164,7 +206,6 @@ if ($show_details && sanitize_title($show_details['name']) !== $show_slug) {
                         </select>
                     </div>
                 </div>
-                <!-- end player -->
             </div>
         <?php endif; ?>
     </div>
