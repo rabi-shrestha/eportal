@@ -8,7 +8,9 @@ get_header();
             <div class="col-12">
                 <div class="section__wrap">
                     <!-- section title -->
-                    <h1 class="section__title section__title--head">Search Result : <?php echo esc_html($search_term); ?></h1>
+                    <h1 class="section__title section__title--head">Search Result :
+                        <?php echo esc_html($search_term); ?>
+                    </h1>
                     <!-- end section title -->
 
                     <!-- breadcrumbs -->
@@ -98,7 +100,7 @@ get_header();
                             </select>
                         </div>
                         <!-- end filter desk -->
-                        
+
                         <!-- filter btn -->
                         <button class="filter__btn" type="button">Apply</button>
                         <!-- end filter btn -->
@@ -112,31 +114,39 @@ get_header();
         </div>
     </div>
     <!-- end filter (fixed position) -->
-    
+
     <!-- catalog -->
     <div class="section section--catalog">
         <div class="container">
             <div class="row">
-                <?php if(!empty($search_result)): ?>
-                    <?php foreach ($search_result as $show) : ?>
+                <?php if (!empty($search_result)): ?>
+                    <?php $tvmaze_url = "https://www.tvmaze.com"; ?>
+                    <?php foreach ($search_result as $show): ?>
                         <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
                             <div class="item">
                                 <div class="item__cover">
                                     <img src="<?php echo $show['image']; ?>" alt="" />
-                                    <?php if (!empty($show['image'])) : ?>
+                                    <?php if (!empty($show['image'])): ?>
                                         <img src="<?php echo esc_url($show['image']); ?>" alt="" />
                                     <?php else: ?>
-                                        <img src="<?php echo get_template_directory_uri(); ?>/img/default/default.svg" alt="<?php echo esc_attr($show['name']); ?>" alt="" />
+                                        <img src="<?php echo get_template_directory_uri(); ?>/img/default/default.svg"
+                                            alt="<?php echo esc_attr($show['name']); ?>" alt="" />
                                     <?php endif; ?>
-                                    <a href="<?php echo $show['url']; ?>" class="item__play">
+                                    <?php
+
+                                    ?>
+                                    <a href="<?php echo site_url(str_replace($tvmaze_url, '', $show['url'])); ?>"
+                                        class="item__play">
                                         <i class="ti ti-player-play-filled"></i>
                                     </a>
-                                    <?php if (!empty($show['rating'])) : ?>
+                                    <?php if (!empty($show['rating'])): ?>
                                         <span class="item__rate item__rate--green"><?php echo $show['rating']; ?></span>
                                     <?php endif; ?>
                                 </div>
                                 <div class="item__content">
-                                    <h3 class="item__title"><a href="<?php echo $show['url']; ?>"><?php echo esc_html($show['name']); ?></a></h3>
+                                    <h3 class="item__title"><a
+                                            href="<?php echo site_url(str_replace($tvmaze_url, '', $show['url'])); ?>"><?php echo esc_html($show['name']); ?></a>
+                                    </h3>
                                     <span class="item__category">
                                         <?php echo esc_html(implode(', ', $show['genres'])); ?>
                                     </span>
@@ -190,15 +200,18 @@ get_header();
                             <li class="splide__slide">
                                 <div class="item item--carousel">
                                     <div class="item__cover">
-                                        <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover.jpg" alt="">
+                                        <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover.jpg"
+                                            alt="">
                                         <a href="details.html" class="item__play">
                                             <i class="ti ti-player-play-filled"></i>
                                         </a>
                                         <span class="item__rate item__rate--green">8.4</span>
-                                        <button class="item__favorite" type="button"><i class="ti ti-bookmark"></i></button>
+                                        <button class="item__favorite" type="button"><i
+                                                class="ti ti-bookmark"></i></button>
                                     </div>
                                     <div class="item__content">
-                                        <h3 class="item__title"><a href="details.html">I Dream in Another Language</a></h3>
+                                        <h3 class="item__title"><a href="details.html">I Dream in Another Language</a>
+                                        </h3>
                                         <span class="item__category">
                                             <a href="#">Action</a>
                                             <a href="#">Triler</a>
@@ -210,12 +223,14 @@ get_header();
                             <li class="splide__slide">
                                 <div class="item item--carousel">
                                     <div class="item__cover">
-                                        <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover2.jpg" alt="">
+                                        <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover2.jpg"
+                                            alt="">
                                         <a href="details.html" class="item__play">
                                             <i class="ti ti-player-play-filled"></i>
                                         </a>
                                         <span class="item__rate item__rate--green">7.1</span>
-                                        <button class="item__favorite" type="button"><i class="ti ti-bookmark"></i></button>
+                                        <button class="item__favorite" type="button"><i
+                                                class="ti ti-bookmark"></i></button>
                                     </div>
                                     <div class="item__content">
                                         <h3 class="item__title"><a href="details.html">Benched</a></h3>
@@ -229,12 +244,14 @@ get_header();
                             <li class="splide__slide">
                                 <div class="item item--carousel">
                                     <div class="item__cover">
-                                        <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover3.jpg" alt="">
+                                        <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover3.jpg"
+                                            alt="">
                                         <a href="details.html" class="item__play">
                                             <i class="ti ti-player-play-filled"></i>
                                         </a>
                                         <span class="item__rate item__rate--red">6.3</span>
-                                        <button class="item__favorite" type="button"><i class="ti ti-bookmark"></i></button>
+                                        <button class="item__favorite" type="button"><i
+                                                class="ti ti-bookmark"></i></button>
                                     </div>
                                     <div class="item__content">
                                         <h3 class="item__title"><a href="details.html">Whitney</a></h3>
@@ -250,12 +267,14 @@ get_header();
                             <li class="splide__slide">
                                 <div class="item item--carousel">
                                     <div class="item__cover">
-                                        <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover4.jpg" alt="">
+                                        <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover4.jpg"
+                                            alt="">
                                         <a href="details.html" class="item__play">
                                             <i class="ti ti-player-play-filled"></i>
                                         </a>
                                         <span class="item__rate item__rate--yellow">6.9</span>
-                                        <button class="item__favorite" type="button"><i class="ti ti-bookmark"></i></button>
+                                        <button class="item__favorite" type="button"><i
+                                                class="ti ti-bookmark"></i></button>
                                     </div>
                                     <div class="item__content">
                                         <h3 class="item__title"><a href="details.html">Blindspotting</a></h3>
@@ -270,15 +289,18 @@ get_header();
                             <li class="splide__slide">
                                 <div class="item item--carousel">
                                     <div class="item__cover">
-                                        <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover5.jpg" alt="">
+                                        <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover5.jpg"
+                                            alt="">
                                         <a href="details.html" class="item__play">
                                             <i class="ti ti-player-play-filled"></i>
                                         </a>
                                         <span class="item__rate item__rate--green">8.4</span>
-                                        <button class="item__favorite" type="button"><i class="ti ti-bookmark"></i></button>
+                                        <button class="item__favorite" type="button"><i
+                                                class="ti ti-bookmark"></i></button>
                                     </div>
                                     <div class="item__content">
-                                        <h3 class="item__title"><a href="details.html">I Dream in Another Language</a></h3>
+                                        <h3 class="item__title"><a href="details.html">I Dream in Another Language</a>
+                                        </h3>
                                         <span class="item__category">
                                             <a href="#">Action</a>
                                             <a href="#">Triler</a>
@@ -290,12 +312,14 @@ get_header();
                             <li class="splide__slide">
                                 <div class="item item--carousel">
                                     <div class="item__cover">
-                                        <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover6.jpg" alt="">
+                                        <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover6.jpg"
+                                            alt="">
                                         <a href="details.html" class="item__play">
                                             <i class="ti ti-player-play-filled"></i>
                                         </a>
                                         <span class="item__rate item__rate--green">7.1</span>
-                                        <button class="item__favorite" type="button"><i class="ti ti-bookmark"></i></button>
+                                        <button class="item__favorite" type="button"><i
+                                                class="ti ti-bookmark"></i></button>
                                     </div>
                                     <div class="item__content">
                                         <h3 class="item__title"><a href="details.html">Benched</a></h3>
@@ -309,12 +333,14 @@ get_header();
                             <li class="splide__slide">
                                 <div class="item item--carousel">
                                     <div class="item__cover">
-                                        <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover7.jpg" alt="">
+                                        <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover7.jpg"
+                                            alt="">
                                         <a href="details.html" class="item__play">
                                             <i class="ti ti-player-play-filled"></i>
                                         </a>
                                         <span class="item__rate item__rate--green">7.1</span>
-                                        <button class="item__favorite" type="button"><i class="ti ti-bookmark"></i></button>
+                                        <button class="item__favorite" type="button"><i
+                                                class="ti ti-bookmark"></i></button>
                                     </div>
                                     <div class="item__content">
                                         <h3 class="item__title"><a href="details.html">Benched</a></h3>
@@ -328,15 +354,18 @@ get_header();
                             <li class="splide__slide">
                                 <div class="item item--carousel">
                                     <div class="item__cover">
-                                        <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover8.jpg" alt="">
+                                        <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover8.jpg"
+                                            alt="">
                                         <a href="details.html" class="item__play">
                                             <i class="ti ti-player-play-filled"></i>
                                         </a>
                                         <span class="item__rate item__rate--red">5.5</span>
-                                        <button class="item__favorite" type="button"><i class="ti ti-bookmark"></i></button>
+                                        <button class="item__favorite" type="button"><i
+                                                class="ti ti-bookmark"></i></button>
                                     </div>
                                     <div class="item__content">
-                                        <h3 class="item__title"><a href="details.html">I Dream in Another Language</a></h3>
+                                        <h3 class="item__title"><a href="details.html">I Dream in Another Language</a>
+                                        </h3>
                                         <span class="item__category">
                                             <a href="#">Action</a>
                                             <a href="#">Triler</a>
@@ -348,12 +377,14 @@ get_header();
                             <li class="splide__slide">
                                 <div class="item item--carousel">
                                     <div class="item__cover">
-                                        <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover9.jpg" alt="">
+                                        <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover9.jpg"
+                                            alt="">
                                         <a href="details.html" class="item__play">
                                             <i class="ti ti-player-play-filled"></i>
                                         </a>
                                         <span class="item__rate item__rate--yellow">6.7</span>
-                                        <button class="item__favorite" type="button"><i class="ti ti-bookmark"></i></button>
+                                        <button class="item__favorite" type="button"><i
+                                                class="ti ti-bookmark"></i></button>
                                     </div>
                                     <div class="item__content">
                                         <h3 class="item__title"><a href="details.html">Blindspotting</a></h3>
@@ -368,12 +399,14 @@ get_header();
                             <li class="splide__slide">
                                 <div class="item item--carousel">
                                     <div class="item__cover">
-                                        <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover10.jpg" alt="">
+                                        <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover10.jpg"
+                                            alt="">
                                         <a href="details.html" class="item__play">
                                             <i class="ti ti-player-play-filled"></i>
                                         </a>
                                         <span class="item__rate item__rate--red">5.6</span>
-                                        <button class="item__favorite" type="button"><i class="ti ti-bookmark"></i></button>
+                                        <button class="item__favorite" type="button"><i
+                                                class="ti ti-bookmark"></i></button>
                                     </div>
                                     <div class="item__content">
                                         <h3 class="item__title"><a href="details.html">Whitney</a></h3>
@@ -389,12 +422,14 @@ get_header();
                             <li class="splide__slide">
                                 <div class="item item--carousel">
                                     <div class="item__cover">
-                                        <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover11.jpg" alt="">
+                                        <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover11.jpg"
+                                            alt="">
                                         <a href="details.html" class="item__play">
                                             <i class="ti ti-player-play-filled"></i>
                                         </a>
                                         <span class="item__rate item__rate--green">9.2</span>
-                                        <button class="item__favorite" type="button"><i class="ti ti-bookmark"></i></button>
+                                        <button class="item__favorite" type="button"><i
+                                                class="ti ti-bookmark"></i></button>
                                     </div>
                                     <div class="item__content">
                                         <h3 class="item__title"><a href="details.html">Benched</a></h3>
@@ -408,15 +443,18 @@ get_header();
                             <li class="splide__slide">
                                 <div class="item item--carousel">
                                     <div class="item__cover">
-                                        <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover12.jpg" alt="">
+                                        <img src="<?php echo get_template_directory_uri(); ?>/img/covers/cover12.jpg"
+                                            alt="">
                                         <a href="details.html" class="item__play">
                                             <i class="ti ti-player-play-filled"></i>
                                         </a>
                                         <span class="item__rate item__rate--green">8.4</span>
-                                        <button class="item__favorite" type="button"><i class="ti ti-bookmark"></i></button>
+                                        <button class="item__favorite" type="button"><i
+                                                class="ti ti-bookmark"></i></button>
                                     </div>
                                     <div class="item__content">
-                                        <h3 class="item__title"><a href="details.html">I Dream in Another Language</a></h3>
+                                        <h3 class="item__title"><a href="details.html">I Dream in Another Language</a>
+                                        </h3>
                                         <span class="item__category">
                                             <a href="#">Action</a>
                                             <a href="#">Triler</a>

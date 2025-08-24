@@ -82,13 +82,16 @@ if ($show_details && sanitize_title($show_details['name']) !== $show_slug) {
                             }
                         }
                         ?>
+
                         <div class="row">
                             <!-- card cover -->
                             <div class="col-12 col-sm-5 col-md-5 col-lg-4 col-xl-6 col-xxl-5">
                                 <div class="item__cover">
-                                    <img src="<?php echo esc_url($show_details['image']['medium']); ?>" alt="">
-                                    <span
-                                        class="item__rate item__rate--green"><?php echo esc_html($show_details['rating']['average'] ?? 'N/A'); ?></span>
+                                    <img src="<?php echo esc_url($show_details['image']['medium'] ?? get_template_directory_uri() . '/img/default.jpg'); ?>"
+                                        alt="">
+                                    <span class="item__rate item__rate--green">
+                                        <?php echo esc_html($show_details['rating']['average'] ?? 'N/A'); ?>
+                                    </span>
                                 </div>
                             </div>
                             <!-- end card cover -->
@@ -98,29 +101,37 @@ if ($show_details && sanitize_title($show_details['name']) !== $show_slug) {
                                 <div class="item__content">
                                     <ul class="item__meta">
                                         <li><span>Director:</span> <a href="actor.html">Vince Gilligan</a></li>
-                                        <li><span>Cast:</span> <a href="actor.html">Brian Cranston</a> <a
-                                                href="actor.html">Jesse Plemons</a> <a href="actor.html">Matt Jones</a> <a
-                                                href="actor.html">Jonathan Banks</a> <a href="actor.html">Charles Baker</a>
+                                        <li><span>Cast:</span>
+                                            <a href="actor.html">Brian Cranston</a>
+                                            <a href="actor.html">Jesse Plemons</a>
+                                            <a href="actor.html">Matt Jones</a>
+                                            <a href="actor.html">Jonathan Banks</a>
+                                            <a href="actor.html">Charles Baker</a>
                                             <a href="actor.html">Tess Harper</a>
                                         </li>
                                         <li><span>Genre:</span>
-                                            <?php echo esc_html(implode(', ', $show_details['genres'] ?? [])); ?></li>
-                                        <li><span>Language:</span> <?php echo esc_html($show_details['language']); ?></li>
-                                        <li><span>Premiere:</span> <?php echo esc_html($show_details['premiered']); ?></li>
-                                        <li><span>Running time:</span> <?php echo esc_html($show_details['runtime']); ?>
+                                            <?php echo !empty($show_details['genres']) ? esc_html(implode(', ', $show_details['genres'])) : 'N/A'; ?>
                                         </li>
-                                        <li><span>Country:</span> <a
-                                                href="catalog.html"><?php echo esc_html($show_details['network']['country']['name']); ?></a>
+                                        <li><span>Language:</span>
+                                            <?php echo esc_html($show_details['language'] ?? 'N/A'); ?>
+                                        </li>
+                                        <li><span>Premiere:</span>
+                                            <?php echo esc_html($show_details['premiered'] ?? 'N/A'); ?>
+                                        </li>
+                                        <li><span>Running time:</span>
+                                            <?php echo esc_html($show_details['runtime'] ?? 'N/A'); ?>
+                                        </li>
+                                        <li><span>Country:</span>
+                                            <a href="catalog.html">
+                                                <?php echo esc_html($show_details['network']['country']['name'] ?? 'Unknown'); ?>
+                                            </a>
                                         </li>
                                     </ul>
-
-                                    <div class="item__description">
-                                        <?php echo $show_details['summary']; ?>
-                                    </div>
                                 </div>
                             </div>
                             <!-- end card content -->
                         </div>
+
                     </div>
                 </div>
                 <!-- end content -->
@@ -174,6 +185,12 @@ if ($show_details && sanitize_title($show_details['name']) !== $show_slug) {
                             <?php endif; ?>
                         </select>
                     </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="item__description">
+                    <?php echo !empty($show_details['summary']) ? wp_kses_post($show_details['summary']) : '<p>No description available.</p>'; ?>
                 </div>
             </div>
         <?php endif; ?>
