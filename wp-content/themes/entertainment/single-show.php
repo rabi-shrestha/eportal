@@ -151,27 +151,12 @@ if ($show_details && sanitize_title($show_details['name']) !== $show_slug) {
                 </style>
 
                 <div class="col-12 col-xl-6">
+                    <?php
+                    $plugin_instance = new Entertainment_Settings();
+
+                    ?>
                     <div class="section__player">
-                        <video controls crossorigin playsinline
-                            poster="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.jpg" id="player">
-                            <!-- Video files -->
-                            <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4"
-                                type="video/mp4" size="576">
-                            <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-720p.mp4"
-                                type="video/mp4" size="720">
-                            <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-1080p.mp4"
-                                type="video/mp4" size="1080">
-
-                            <!-- Caption files -->
-                            <track kind="captions" label="English" srclang="en"
-                                src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.en.vtt" default>
-                            <track kind="captions" label="Français" srclang="fr"
-                                src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.fr.vtt">
-
-                            <!-- Fallback -->
-                            <a href="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4"
-                                download>Download</a>
-                        </video>
+                        <?php $plugin_instance->tvmage_youtube_video_details(esc_html($show_details['name'])); ?>
                     </div>
 
                     <div class="section__item-filter">

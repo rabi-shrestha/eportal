@@ -58,6 +58,14 @@ function facebook_app_secret() {
     return null;
 }
 
+function youtube_data_api_v3_key() {
+    // Access the API key defined in the config file
+    if (defined('YOUTUBE_DATA_API_V3_KEY')) {
+        return YOUTUBE_DATA_API_V3_KEY;
+    }   
+    return null;
+}
+
 // Example shortcode to display the API key (remove this in production for security)
 add_shortcode('show_api_key', function () {
     $api_key = tvmage_api_key();
