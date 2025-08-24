@@ -270,4 +270,26 @@ class Entertainment_Settings
         // Return the Base64 image string with the appropriate MIME type
         return 'data:' . $mime_type . ';base64,' . $base64_image;
     }
+
+    function fetch_full_show_details($show_id)
+    {
+        $details = [];
+
+        // Basic show info
+        $details['show'] = json_decode(wp_remote_retrieve_body(wp_remote_get("https://api.tvmaze.com/shows/$show_id")), true);
+
+        // Episodes
+        $details['episodes'] = json_decode(wp_remote_retrieve_body(wp_remote_get("https://api.tvmaze.com/shows/$show_id/episodes")), true);
+
+        // Cast
+        $details['cast'] = json_decode(wp_remote_retrieve_body(wp_remote_get("https://api.tvmaze.com/shows/$show_id/cast")), true);
+
+        // Seasons
+        $details['seasons'] = json_decode(wp_remote_retrieve_body(wp_remote_get("https://api.tvmaze.com/shows/$show_id/seasons")), true);
+
+        // Images
+        $details['images'] = json_decode(wp_remote_retrieve_body(wp_remote_get("https://api.tvmaze.com/shows/$show_id/images")), true);
+
+        return $details;
+    }
 }

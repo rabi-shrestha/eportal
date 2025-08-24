@@ -9,132 +9,58 @@ get_header();
 $show_id = get_query_var('show_id');
 $show_slug = get_query_var('show_slug');
 
-// Fetch the show details
-function fetch_show_details($id)
-{
-    $api_url = "https://api.tvmaze.com/shows/$id";
-    $response = wp_remote_get($api_url);
+$plugin_instance = new Entertainment_Settings();
 
-    if (is_wp_error($response)) {
-        return null; // Handle API errors
-    }
-
-    $data = wp_remote_retrieve_body($response);
-    return json_decode($data, true);
-}
-
-$show_details = fetch_show_details($show_id);
+$details = $plugin_instance->fetch_full_show_details($show_id);
+$show = $details['show'] ?? null;
 
 // Validate slug (optional)
-if ($show_details && sanitize_title($show_details['name']) !== $show_slug) {
-    // Redirect to the correct slug URL if it doesn't match
-    wp_redirect(home_url("/shows/$show_id/" . sanitize_title($show_details['name'])));
+if ($show && sanitize_title($show['name']) !== $show_slug) {
+    wp_redirect(home_url("/shows/$show_id/" . sanitize_title($show['name'])));
     exit;
 }
 ?>
 
 <section class="section section--details">
-    <!-- details background -->
-    <div class="section__details-bg" data-bg="<?php echo get_template_directory_uri(); ?>/img/bg/details__bg.jpg"
+    <div class="section__details-bg"
         style="background: url(<?php echo get_template_directory_uri(); ?>/img/bg/details__bg.jpg) center center / cover no-repeat;">
     </div>
-    <!-- end details background -->
-
-    <!-- details content -->
     <div class="container">
-        <?php if ($show_details): ?>
+        <?php if ($show): ?>
             <div class="row">
-                <!-- title -->
+                <!-- Show Title -->
                 <div class="col-12">
-                    <h1 class="section__title section__title--head"><?php echo esc_html($show_details['name']); ?></h1>
+                    <h1 class="section__title section__title--head"><?php echo esc_html($show['name']); ?></h1>
                 </div>
-                <!-- end title -->
 
-                <!-- content -->
+                <!-- Show Info -->
                 <div class="col-12 col-xl-6">
                     <div class="item item--details">
-                        <?php
-                        $entertainment_service = new Entertainment_Service();
-                        $show_detail = $entertainment_service->get_show_by_id($show_details['id']);
-
-                        if (is_wp_error($show_detail)) {
-                            // Handle the error returned by the function
-                            echo '<p>Error: ' . $show_detail->get_error_message() . '</p>';
-                        } else {
-                            // Use the empty() function to check if the result contains data
-                            $check = empty($show_detail);
-
-                            if ($check) {
-                                $inserted_id = $entertainment_service->insert_show_detail($show_details);
-
-                                if (is_wp_error($inserted_id)) {
-                                    echo '<p>Error: ' . $inserted_id->get_error_message() . '</p>';
-                                } else {
-                                    //Create post on Facebook
-                                    $fbpost = new Entertainment_Facebook();
-
-                                    $app_id = facebook_app_id();
-                                    $app_secret = facebook_app_secret();
-                                    $token = $fbpost->renew_facebook_token($app_id, $app_secret);
-
-                                    $fbpost->create_facebook_post($show_details, $token);
-                                }
-                            }
-                        }
-                        ?>
-
                         <div class="row">
-                            <!-- card cover -->
-                            <div class="col-12 col-sm-5 col-md-5 col-lg-4 col-xl-6 col-xxl-5">
+                            <div class="col-12 col-sm-5 col-md-5 col-lg-4 col-xl-6">
                                 <div class="item__cover">
-                                    <img src="<?php echo esc_url($show_details['image']['medium'] ?? get_template_directory_uri() . '/img/default.jpg'); ?>"
-                                        alt="">
-                                    <span class="item__rate item__rate--green">
-                                        <?php echo esc_html($show_details['rating']['average'] ?? 'N/A'); ?>
-                                    </span>
+                                    <img src="<?php echo esc_url($show['image']['medium'] ?? ''); ?>" alt="">
+                                    <span
+                                        class="item__rate item__rate--green"><?php echo esc_html($show['rating']['average'] ?? 'N/A'); ?></span>
                                 </div>
                             </div>
-                            <!-- end card cover -->
-
-                            <!-- card content -->
-                            <div class="col-12 col-md-7 col-lg-8 col-xl-6 col-xxl-7">
+                            <div class="col-12 col-md-7 col-lg-8 col-xl-6">
                                 <div class="item__content">
                                     <ul class="item__meta">
-                                        <li><span>Director:</span> <a href="actor.html">Vince Gilligan</a></li>
-                                        <li><span>Cast:</span>
-                                            <a href="actor.html">Brian Cranston</a>
-                                            <a href="actor.html">Jesse Plemons</a>
-                                            <a href="actor.html">Matt Jones</a>
-                                            <a href="actor.html">Jonathan Banks</a>
-                                            <a href="actor.html">Charles Baker</a>
-                                            <a href="actor.html">Tess Harper</a>
-                                        </li>
                                         <li><span>Genre:</span>
-                                            <?php echo !empty($show_details['genres']) ? esc_html(implode(', ', $show_details['genres'])) : 'N/A'; ?>
-                                        </li>
-                                        <li><span>Language:</span>
-                                            <?php echo esc_html($show_details['language'] ?? 'N/A'); ?>
-                                        </li>
-                                        <li><span>Premiere:</span>
-                                            <?php echo esc_html($show_details['premiered'] ?? 'N/A'); ?>
-                                        </li>
-                                        <li><span>Running time:</span>
-                                            <?php echo esc_html($show_details['runtime'] ?? 'N/A'); ?>
+                                            <?php echo esc_html(implode(', ', $show['genres'] ?? [])); ?></li>
+                                        <li><span>Language:</span> <?php echo esc_html($show['language'] ?? 'N/A'); ?></li>
+                                        <li><span>Premiere:</span> <?php echo esc_html($show['premiered'] ?? 'N/A'); ?></li>
+                                        <li><span>Runtime:</span> <?php echo esc_html($show['runtime'] ?? 'N/A'); ?> min
                                         </li>
                                         <li><span>Country:</span>
-                                            <a href="catalog.html">
-                                                <?php echo esc_html($show_details['network']['country']['name'] ?? 'Unknown'); ?>
-                                            </a>
-                                        </li>
+                                            <?php echo esc_html($show['network']['country']['name'] ?? 'N/A'); ?></li>
                                     </ul>
                                 </div>
                             </div>
-                            <!-- end card content -->
                         </div>
-
                     </div>
                 </div>
-                <!-- end content -->
 
                 <!-- player -->
 
@@ -159,19 +85,66 @@ if ($show_details && sanitize_title($show_details['name']) !== $show_slug) {
                         /* ensures poster and video scale evenly */
                         display: block;
                     }
+
+                    /* General section background */
+                    .section--details {
+                        background-color: #1c1b1f;
+                        /* Dark background */
+                        color: #fff;
+                        /* Default text color */
+                    }
+
+                    /* Cast section */
+                    .item__description,
+                    h3,
+                    ul.list-inline,
+                    ul.list-inline li,
+                    .card .card-title,
+                    .card .card-text,
+                    p,
+                    small {
+                        color: #fff !important;
+                    }
+
+                    /* Cast images */
+                    .item__content img,
+                    .card img {
+                        border-radius: 8px;
+                    }
+
+                    /* Episode cards */
+                    .card {
+                        background-color: #222028;
+                        border: none;
+                        border-radius: 8px;
+                    }
+
+                    .card-body {
+                        color: #fff;
+                    }
+
+                    /* Season list */
+                    ul.list-inline li {
+                        margin-right: 10px;
+                    }
+
+                    /* YouTube select */
+                    .section__item-select {
+                        background-color: #222028;
+                        color: #fff;
+                        border: none;
+                        border-radius: 8px;
+                        padding: 0.5rem 1rem;
+                    }
                 </style>
 
                 <div class="col-12 col-xl-6">
-                    <?php
-                    $plugin_instance = new Entertainment_Settings();
-
-                    ?>
                     <div class="section__player">
-                        <?php $plugin_instance->tvmage_youtube_video_details(esc_html($show_details['name'])); ?>
+                        <?php $plugin_instance->tvmage_youtube_video_details(esc_html($show['name'])); ?>
                     </div>
 
                     <div class="section__item-filter">
-                        <?php $video_items = $plugin_instance->tvmage_youtube_video_items(esc_html($show_details['name'])); ?>
+                        <?php $video_items = $plugin_instance->tvmage_youtube_video_items(esc_html($show['name'])); ?>
 
                         <select class="section__item-select" name="video" id="filter__video">
                             <?php if (!empty($video_items) && empty($video_items['error'])): ?>
@@ -188,11 +161,67 @@ if ($show_details && sanitize_title($show_details['name']) !== $show_slug) {
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row my-5">
+                <!-- Description -->
                 <div class="item__description">
-                    <?php echo !empty($show_details['summary']) ? wp_kses_post($show_details['summary']) : '<p>No description available.</p>'; ?>
+                    <?php echo $show['summary'] ?? ''; ?>
                 </div>
             </div>
+
+            <div class="row">
+                <!-- Cast -->
+                <div class="col-12 col-xl-12">
+                    <h3>Cast</h3>
+                    <div class="row">
+                        <?php foreach ($details['cast'] ?? [] as $member): ?>
+                            <div class="col-4 col-md-3 col-lg-2 text-center mb-3">
+                                <img src="<?php echo esc_url($member['person']['image']['medium'] ?? ''); ?>"
+                                    alt="<?php echo esc_attr($member['person']['name']); ?>" class="img-fluid rounded">
+                                <p><?php echo esc_html($member['person']['name']); ?></p>
+                                <small>as <?php echo esc_html($member['character']['name']); ?></small>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+
+                <!-- Seasons -->
+                <div class="col-12 col-xl-12">
+                    <h3>Seasons</h3>
+                    <ul class="list-inline">
+                        <?php foreach ($details['seasons'] ?? [] as $season): ?>
+                            <li class="list-inline-item">
+                                Season <?php echo esc_html($season['number']); ?>
+                                (<?php echo esc_html($season['premiereDate'] ?? '-'); ?>)
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+
+                <!-- Episodes -->
+                <div class="col-12 col-xl-12">
+                    <h3>Episodes</h3>
+                    <div class="row">
+                        <?php foreach ($details['episodes'] ?? [] as $ep): ?>
+                            <div class="col-6 col-md-4 col-lg-3 mb-3">
+                                <div class="card">
+                                    <?php if (!empty($ep['image']['medium'])): ?>
+                                        <img src="<?php echo esc_url($ep['image']['medium']); ?>" class="card-img-top"
+                                            alt="<?php echo esc_attr($ep['name']); ?>">
+                                    <?php endif; ?>
+                                    <div class="card-body">
+                                        <h5 class="card-title"><?php echo esc_html($ep['name']); ?></h5>
+                                        <p class="card-text">
+                                            S<?php echo esc_html($ep['season']); ?>E<?php echo esc_html($ep['number']); ?></p>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+
+            </div>
+        <?php else: ?>
+            <p>Show details not found.</p>
         <?php endif; ?>
     </div>
 </section>
