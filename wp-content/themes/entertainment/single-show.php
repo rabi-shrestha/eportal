@@ -160,34 +160,18 @@ if ($show_details && sanitize_title($show_details['name']) !== $show_slug) {
                     </div>
 
                     <div class="section__item-filter">
-                        <select class="section__item-select" name="season" id="filter__season">
-                            <option value="0">Season 1</option>
-                            <option value="1">Season 2</option>
-                            <option value="2">Season 3</option>
-                            <option value="3">Season 4</option>
-                            <option value="4">Season 5</option>
-                        </select>
+                        <?php $video_items = $plugin_instance->tvmage_youtube_video_items(esc_html($show_details['name'])); ?>
 
-                        <select class="section__item-select" name="series" id="filter__series">
-                            <option value="0">Series 1</option>
-                            <option value="1">Series 2</option>
-                            <option value="2">Series 3</option>
-                            <option value="3">Series 4</option>
-                            <option value="4">Series 5</option>
-                            <option value="5">Series 6</option>
-                            <option value="6">Series 7</option>
-                            <option value="7">Series 8</option>
-                            <option value="8">Series 9</option>
-                            <option value="9">Series 10</option>
-                            <option value="10">Series 11</option>
-                            <option value="11">Series 12</option>
-                        </select>
-
-                        <select class="section__item-select" name="sync" id="filter__sync">
-                            <option value="0">Eng.Original</option>
-                            <option value="1">NewStudio</option>
-                            <option value="2">LostFilm</option>
-                            <option value="3">HotFlix</option>
+                        <select class="section__item-select" name="video" id="filter__video">
+                            <?php if (!empty($video_items) && empty($video_items['error'])): ?>
+                                <?php foreach ($video_items as $video): ?>
+                                    <option value="<?php echo esc_attr($video['videoId']); ?>">
+                                        <?php echo esc_html(trim($video['title'], "\"' ")); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <option value="">No videos found</option>
+                            <?php endif; ?>
                         </select>
                     </div>
                 </div>

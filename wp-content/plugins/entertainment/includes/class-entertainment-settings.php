@@ -199,6 +199,47 @@ class Entertainment_Settings
         }
     }
 
+    public function tvmage_youtube_video_items($query, $maxResults = 5)
+    {
+        $apiKey = youtube_data_api_v3_key();
+
+        // Build the API URL
+        $apiUrl = sprintf(
+            'https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q=%s&maxResults=%d&key=%s',
+            urlencode($query),
+            $maxResults,
+            $apiKey
+        );
+
+        // Make the request safely
+        $response = @file_get_contents($apiUrl);
+
+        if ($response === false) {
+            return ['error' => 'Error fetching data from YouTube API'];
+        }
+
+        // Decode JSON response
+        $data = json_decode($response, true);
+
+        if (isset($data['items']) && is_array($data['items']) && count($data['items']) > 0) {
+            $result = array_map(function ($item) {
+                return [
+                    'videoId' => $item['id']['videoId'] ?? null,
+                    'title' => $item['snippet']['title'] ?? null,
+                    'thumbnail' => $item['snippet']['thumbnails']['medium']['url'] ?? null,
+                    'publishedAt' => $item['snippet']['publishedAt'] ?? null,
+                ];
+            }, $data['items']);
+
+            // Filter out invalid results
+            $result = array_filter($result, fn($v) => $v['videoId'] && $v['title']);
+
+            return array_values($result);
+        }
+
+        return ['error' => 'No video found'];
+    }
+
     public function get_cloaked_image_url($external_image_url, $image_type)
     {
         $image_url = $this->get_base64_image_from_url($external_image_url);

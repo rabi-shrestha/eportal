@@ -303,27 +303,10 @@
 	}
 
 	/* tv series */
-	if (document.querySelector('#filter__season')) {
-		new SlimSelect({
-			select: '#filter__season',
-			settings: {
-				showSearch: false,
-			}
-		});
-	}
 
-	if (document.querySelector('#filter__series')) {
+	if (document.querySelector('#filter__video')) {
 		new SlimSelect({
-			select: '#filter__series',
-			settings: {
-				showSearch: false,
-			}
-		});
-	}
-
-	if (document.querySelector('#filter__sync')) {
-		new SlimSelect({
-			select: '#filter__sync',
+			select: '#filter__video',
 			settings: {
 				showSearch: false,
 			}
